@@ -1,153 +1,212 @@
 /*
-    Copyright 2020-2021. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-    Licensed under the Apache License, Version 2.0 (the "License")
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-*/
+import 'dart:async';
+import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:huawei_dtm/huawei_dtm.dart';
 
-import 'keys.dart';
-import 'widgets/custom_appbar.dart';
-import 'widgets/custom_button.dart';
-
-void main() => runApp(HomePage());
-
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
+void main() {
+  runApp(const App());
 }
 
-class _HomePageState extends State<HomePage> {
-  late var subscription;
-  bool _showFourthButton = false;
+class App extends StatelessWidget {
+  const App({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final List<String> logs = <String>[];
+  late final StreamSubscription<Map<String, dynamic>> onCustomTagEvent;
+  bool showFourthButton = false;
 
   @override
   void initState() {
-    subscription = HMSDTM.customTagStream.listen((event) {
-      print("Custom Tag response: " + event.toString());
-
-      /*
-        The condition to detect the tag for setting the custom variable.
-       */
-      if (event['price'] != null) {
-        _setCustomVariable(event);
-      }
-    });
     super.initState();
+    onCustomTagEvent = HMSDTM.customTagStream.listen(
+      (Map<String, dynamic> event) async {
+        log('onCustomTagEvent', event);
+
+        if (event['price'] != null) {
+          try {
+            final double price = double.parse(event['price']);
+            final double discount = double.parse(event['discount']);
+            final double newPrice = price - (price * discount / 100);
+            await HMSDTM.setCustomVariable('PantsPrice', newPrice);
+            log('setCustomVariable', null);
+          } catch (e) {
+            log('setCustomVariable', e, false);
+          }
+        }
+      },
+    );
   }
 
   @override
   void dispose() {
-    subscription.cancel();
+    onCustomTagEvent.cancel();
     super.dispose();
+  }
+
+  Future<dynamic> sendCustomEvent() async {
+    return await HMSDTM.onEvent(
+      'Platform',
+      <String, dynamic>{
+        'platformName': 'Flutter',
+      },
+    );
+  }
+
+  Future<dynamic> customTag() async {
+    return await HMSDTM.onEvent(
+      'PurchaseShoes',
+      <String, dynamic>{
+        'price': '70',
+      },
+    );
+  }
+
+  Future<dynamic> setCustomVariableValue() async {
+    await HMSDTM.onEvent(
+      'SetPantsPrice',
+      <String, dynamic>{"discount": 10, "price": 70},
+    );
+    setState(() => showFourthButton = true);
+  }
+
+  Future<dynamic> reportEventWithCustomVariable() async {
+    return await HMSDTM.onEvent(
+      'PurchasePants',
+      <String, dynamic>{},
+    );
+  }
+
+  void log(String method, dynamic message, [bool isSuccess = true]) {
+    final String status = isSuccess ? 'SUCCESS' : 'FAILURE';
+    final String logMessage = '$status\n${message ?? ''}'.trim();
+    developer.log(logMessage, name: method);
+    setState(() => logs.insert(0, '[$method]: $logMessage'));
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(primaryColor: Colors.white),
-      home: Scaffold(
-        appBar: customAppBar(
-          title: 'HMS DTM Flutter Demo',
+    return Scaffold(
+      appBar: AppBar(
+        title: const Tooltip(
+          message: 'Flutter Version: 6.6.0+303',
+          child: Text('HMS DTM Demo'),
         ),
-        body: Container(
-          padding: EdgeInsets.all(30.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              CustomButton(
-                key: Key(Keys.SEND_CUSTOM_EVENT),
-                title: "Send Custom Event",
-                onPressed: _sendCustomEvent,
+      ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                physics: const BouncingScrollPhysics(),
+                child: Wrap(
+                  spacing: 16,
+                  alignment: WrapAlignment.center,
+                  children: <Widget>[
+                    buildButton(
+                      text: 'Send Custom Event',
+                      onPressed: sendCustomEvent,
+                    ),
+                    const Divider(),
+                    buildButton(
+                      text: 'Custom Tag',
+                      onPressed: customTag,
+                    ),
+                    const Divider(),
+                    buildButton(
+                      text: 'Set Custom Variable Value',
+                      onPressed: setCustomVariableValue,
+                    ),
+                    const Divider(),
+                    if (showFourthButton)
+                      buildButton(
+                        text: 'Report Event with Custom Variable',
+                        onPressed: reportEventWithCustomVariable,
+                      ),
+                  ],
+                ),
               ),
-              CustomButton(
-                key: Key(Keys.CUSTOM_TAG),
-                title: "Custom Tag",
-                onPressed: _customTag,
-              ),
-              CustomButton(
-                key: Key(Keys.SET_CUSTOM_VARIABLE_VALUE),
-                title: "Set Custom Variable Value",
-                onPressed: () {
-                  _customVariableWithTag();
-                  setState(() {
-                    _showFourthButton = true;
-                  });
-                },
-              ),
-              _showFourthButton
-                  ? CustomButton(
-                      key: Key(Keys.REPORT_EVENT_WITH_CUSTOM_VARIABLE),
-                      title: "Report Event with Custom Variable",
-                      onPressed: _reportEventWithCustomVariable,
-                    )
-                  : SizedBox.shrink()
-            ],
+            ),
           ),
-        ),
+          const Divider(),
+          buildLogcat(),
+        ],
       ),
     );
   }
 
-  _sendCustomEvent() async {
-    try {
-      const eventName = "Platform";
-      const bundle = {
-        "platformName": "Flutter",
-      };
-      await HMSDTM.onEvent(eventName, bundle);
-    } catch (e) {
-      print("SendCustomEvent error: " + e.toString());
-    }
+  Widget buildButton({
+    required String text,
+    required Future<dynamic> Function() onPressed,
+  }) {
+    return ElevatedButton(
+      onPressed: () async {
+        try {
+          final dynamic result = await onPressed.call();
+          log(text, result);
+        } catch (e) {
+          log(text, e, false);
+        }
+      },
+      child: Text(text),
+    );
   }
 
-  _customTag() async {
-    try {
-      const eventName = "PurchaseShoes";
-      await HMSDTM.onEvent(eventName, {"price": "70"});
-    } catch (e) {
-      print("CustomTag error: " + e.toString());
-    }
-  }
-
-  _customVariableWithTag() async {
-    try {
-      const eventName = "SetPantsPrice";
-      await HMSDTM.onEvent(eventName, Map<String, dynamic>());
-    } catch (e) {
-      print("CustomVariableWithTag error: " + e.toString());
-    }
-  }
-
-  _setCustomVariable(Map map) async {
-    try {
-      var price = double.parse(map['price']);
-      var discount = double.parse(map['discount']);
-      var newPrice = price - (price / 100 * discount);
-      await HMSDTM.setCustomVariable("PantsPrice", newPrice);
-    } catch (e) {
-      print("SetCustomVariable error: " + e.toString());
-    }
-  }
-
-  _reportEventWithCustomVariable() async {
-    try {
-      const eventName = "PurchasePants";
-      await HMSDTM.onEvent(eventName, Map<String, dynamic>());
-    } catch (e) {
-      print("ReportEventWithCustomVariable error: " + e.toString());
-    }
+  Widget buildLogcat() {
+    return GestureDetector(
+      onDoubleTap: () => setState(() => logs.clear()),
+      child: AspectRatio(
+        aspectRatio: 2,
+        child: Container(
+          alignment: Alignment.center,
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.10),
+            borderRadius: const BorderRadius.all(Radius.circular(16)),
+          ),
+          child: logs.isEmpty
+              ? const Text('Double tap to clear logs')
+              : ListView.separated(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: logs.length,
+                  itemBuilder: (_, int index) => Text(logs[index]),
+                  separatorBuilder: (_, __) => const Divider(),
+                ),
+        ),
+      ),
+    );
   }
 }

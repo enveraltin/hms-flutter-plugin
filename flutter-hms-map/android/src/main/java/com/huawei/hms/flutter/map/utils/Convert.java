@@ -1,18 +1,18 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
-
-    Licensed under the Apache License, Version 2.0 (the "License")
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-*/
+ * Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package com.huawei.hms.flutter.map.utils;
 
@@ -57,6 +57,7 @@ import com.huawei.hms.maps.model.Gap;
 import com.huawei.hms.maps.model.HeatMapOptions;
 import com.huawei.hms.maps.model.LatLng;
 import com.huawei.hms.maps.model.LatLngBounds;
+import com.huawei.hms.maps.model.MyLocationStyle;
 import com.huawei.hms.maps.model.PatternItem;
 import com.huawei.hms.maps.model.RoundCap;
 import com.huawei.hms.maps.model.SquareCap;
@@ -102,21 +103,30 @@ public class Convert {
 
         for (Map.Entry<?, ?> entry : args.entrySet()) {
             result.put(Convert.toFloatWrapper(entry.getKey()),
-                    toIntegerWrapper(Long.parseLong((String) entry.getValue())));
+                toIntegerWrapper(Long.parseLong((String) entry.getValue())));
         }
         return result;
     }
 
-    private static Map<Float, Float> toFloatMap(final Object o){
+    private static Map<Float, Float> toFloatMap(final Object o) {
         final Map<?, ?> args = Convert.toMap(o);
         final Map<Float, Float> result = new HashMap<>();
 
         for (Map.Entry<?, ?> entry : args.entrySet()) {
-            result.put(Convert.toFloatWrapper(entry.getKey()),
-                    Convert.toFloatWrapper(entry.getValue()));
+            result.put(Convert.toFloatWrapper(entry.getKey()), Convert.toFloatWrapper(entry.getValue()));
         }
         return result;
 
+    }
+
+    private static List<Integer> toIntegerList(final Object o) {
+        final List<?> data = Convert.toList(o);
+        final List<Integer> integerList = new ArrayList<Integer>();
+
+        for (Object element : data) {
+            integerList.add(Convert.toInt(element));
+        }
+        return integerList;
     }
 
     public static String toString(final Object o) {
@@ -155,7 +165,7 @@ public class Convert {
     public static LatLng[] toLatLngList(final Object o) {
         final List<?> data = Convert.toList(o);
         LatLng[] result = new LatLng[data.size()];
-        for(int i = 0; i<data.size(); i++){
+        for (int i = 0; i < data.size(); i++) {
             result[i] = Convert.toLatLng(data.get(i));
         }
         return result;
@@ -217,6 +227,29 @@ public class Convert {
         } else {
             throw new IllegalArgumentException(Param.ERROR);
         }
+    }
+
+    private static MyLocationStyle toMyLocationStyle(final Object o) {
+        final Map<?, ?> data = Convert.toMap(o);
+        MyLocationStyle myLocationStyle = new MyLocationStyle();
+
+        final Object anchor = data.get(Param.ANCHOR);
+        if (anchor != null) {
+            final List<?> anchorData = Convert.toList(anchor);
+            myLocationStyle.anchor(Convert.toFloat(anchorData.get(0)), Convert.toFloat(anchorData.get(1)));
+        }
+
+        final Object radiusFillColor = data.get(Param.RADIUS_FILL_COLOR);
+        if (radiusFillColor != null) {
+            myLocationStyle.radiusFillColor(Convert.toInt(radiusFillColor));
+        }
+
+        final Object icon = data.get(Param.ICON);
+        if (icon != null) {
+            myLocationStyle.myLocationIcon(Convert.toBitmapDescriptor(icon));
+        }
+
+        return myLocationStyle;
     }
 
     public static CameraPosition toCameraPosition(final Object o) {
@@ -465,7 +498,7 @@ public class Convert {
                 animationSet.addAnimation(processAnimationOptions(element, messenger));
             }
         } catch (final JSONException e) {
-            e.printStackTrace();
+            Log.e("Convert", e.getMessage());
         }
 
         return animationSet;
@@ -589,6 +622,11 @@ public class Convert {
             call.setCompassEnabled(Convert.toBoolean(compassEnabled));
         }
 
+        final Object isDark = args.get(Param.IS_DARK);
+        if (isDark != null) {
+            call.setDark(Convert.toBoolean(isDark));
+        }
+
         final Object mapToolbarEnabled = args.get(Param.MAP_TOOLBAR_ENABLED);
         if (mapToolbarEnabled != null) {
             call.setMapToolbarEnabled(Convert.toBoolean(mapToolbarEnabled));
@@ -710,6 +748,11 @@ public class Convert {
         final Object liteMode = args.get(Param.LITE_MODE);
         if (liteMode != null) {
             call.setLiteMode(Convert.toBoolean(liteMode));
+        }
+
+        final Object myLocationStyle = args.get(Param.MYLOCATION_STYLE);
+        if (myLocationStyle != null) {
+            call.setMyLocationStyle(Convert.toMyLocationStyle(myLocationStyle));
         }
 
         processHuaweiMapOptionsGestures(args, call);
@@ -860,6 +903,16 @@ public class Convert {
             call.setPattern(toPattern(pattern));
         }
 
+        final Object gradient = args.get(Param.GRADIENT);
+        if (gradient != null) {
+            call.setGradient(toBoolean(gradient));
+        }
+
+        final Object colorValues = args.get(Param.COLOR_VALUES);
+        if (colorValues != null) {
+            call.setColorValues(Convert.toIntegerList(colorValues));
+        }
+
         final String polylineId = (String) args.get(Param.POLYLINE_ID);
         if (polylineId == null) {
             throw new IllegalArgumentException(Param.ERROR);
@@ -868,7 +921,8 @@ public class Convert {
         }
     }
 
-    public static String processCircleOptions(final Object o, final CircleMethods call) {
+    public static String processCircleOptions(final Object o, final CircleMethods call,
+        final BinaryMessenger messenger) {
         final Map<?, ?> args = Convert.toMap(o);
         final Object clickable = args.get(Param.CLICKABLE);
         if (clickable != null) {
@@ -913,6 +967,15 @@ public class Convert {
         final Object strokePattern = args.get(Param.STROKE_PATTERN);
         if (strokePattern != null) {
             call.setStrokePattern(Convert.toPattern(strokePattern));
+        }
+
+        final Object animation = args.get(Param.ANIMATION);
+        if (animation != null) {
+            try {
+                call.setAnimation(processAnimationOptions(new JSONObject((String) animation), messenger));
+            } catch (final JSONException e) {
+                Log.e("processCircleOptions", e.getMessage());
+            }
         }
 
         final String circleId = (String) args.get(Param.CIRCLE_ID);
@@ -990,7 +1053,7 @@ public class Convert {
             try {
                 call.setTileProvider(Convert.toTileProvider(tileProvider));
             } catch (final JSONException e) {
-                e.printStackTrace();
+                Log.e("Convert", e.getMessage());
             }
         }
 
@@ -1022,22 +1085,22 @@ public class Convert {
         }
     }
 
-    public static String processHeatMapOptions(final Object o, final HeatMapMethods call){
+    public static String processHeatMapOptions(final Object o, final HeatMapMethods call) {
         final Map<?, ?> data = Convert.toMap(o);
 
         final Object color = data.get(Param.COLOR);
-        if (color != null ){
+        if (color != null) {
             call.setColor(Convert.toColorMap(color));
         }
 
         final Object resourceId = data.get(Param.RESOURCE_ID);
-        if (resourceId != null){
+        if (resourceId != null) {
             call.setDataSet(Convert.toInt(resourceId));
             call.setResourceId(Convert.toInt(resourceId));
         }
 
         final Object jsonData = data.get(Param.JSON_DATA);
-        if (jsonData != null){
+        if (jsonData != null) {
             call.setDataSet(Convert.toString(jsonData));
         }
 
@@ -1047,17 +1110,17 @@ public class Convert {
         }
 
         final Object intensityMap = data.get(Param.INTENSITY_MAP);
-        if(intensityMap != null){
+        if (intensityMap != null) {
             call.setIntensity(Convert.toFloatMap(intensityMap));
         }
 
         final Object opacity = data.get(Param.OPACITY);
-        if(opacity != null){
+        if (opacity != null) {
             call.setOpacity(Convert.toFloat(opacity));
         }
 
         final Object opacityMap = data.get(Param.OPACITY_MAP);
-        if (opacityMap != null){
+        if (opacityMap != null) {
             call.setOpacity(Convert.toFloatMap(opacityMap));
         }
 
@@ -1067,13 +1130,13 @@ public class Convert {
         }
 
         final Object radiusMap = data.get(Param.RADIUS_MAP);
-        if (radiusMap != null){
+        if (radiusMap != null) {
             call.setRadius(Convert.toFloatMap(radiusMap));
         }
 
         final Object radiusUnitInt = data.get(Param.RADIUS_UNIT);
-        if (radiusUnitInt != null){
-            switch (Convert.toInt(radiusUnitInt)){
+        if (radiusUnitInt != null) {
+            switch (Convert.toInt(radiusUnitInt)) {
                 case 0:
                     call.setRadiusUnit(HeatMapOptions.RadiusUnit.PIXEL);
                     break;

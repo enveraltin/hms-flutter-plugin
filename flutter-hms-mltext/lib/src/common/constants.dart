@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,10 +14,12 @@
     limitations under the License.
 */
 
+part of '../../huawei_ml_text.dart';
+
 const String baseChannel = 'huawei.hms.flutter.ml.text';
 
-enum TextTransaction { text }
-
-enum TextPermission { camera, storage }
+enum TextTransaction {
+  text,
+}
 
 typedef TextTransactor = void Function({dynamic result});

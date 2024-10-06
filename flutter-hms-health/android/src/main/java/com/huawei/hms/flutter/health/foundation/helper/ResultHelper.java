@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -43,18 +43,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * ResultHelper<T> is a helper class for reaching {@link ResultListener <T>}.
- * </br>
- * All the generic result request types will be converted into map and returned via Flutter Result instance.
- *
- * @since v.5.0.5
- */
 public final class ResultHelper<T> implements ResultListener<T> {
-    //Internal Flutter Result instance that will be initialized during construction.
+    // Internal Flutter Result instance that will be initialized during construction.
     private Result result;
 
-    //Internal Class type instance that will be initialized during construction.
+    // Internal Class type instance that will be initialized during construction.
     private Class<T> type;
 
     // Application Context
@@ -84,6 +77,11 @@ public final class ResultHelper<T> implements ResultListener<T> {
             ArrayList<Map<String, Object>> resultList = new ArrayList<>(
                 ActivityRecordUtils.activityRecordReplyToMap((ActivityRecordReply) healthResult));
             this.result.success(resultList);
+        } else if (type.equals(List.class) && methodName.equals("readTodaySummationList") || methodName.equals("readDailySummationList") ) {
+            List<SampleSet> sampleSets = (List<SampleSet>) healthResult;
+            List<Map<String, Object>> resultArray = new ArrayList<>(
+                    ActivityRecordUtils.listSampleSetToMap(sampleSets));
+            this.result.success(resultArray);
         } else if (type.equals(List.class)) {
             List<ActivityRecord> activityRecords = (List<ActivityRecord>) healthResult;
             ArrayList<Map<String, Object>> resultArray = new ArrayList<>(

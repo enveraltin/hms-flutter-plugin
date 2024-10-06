@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
+
+part of '../../huawei_ml_body.dart';
 
 class MLHandKeyPointAnalyzerSetting {
   /// Maximum number of returned hand regions.
@@ -31,14 +33,17 @@ class MLHandKeyPointAnalyzerSetting {
   int? sceneType;
   int? maxHandResults;
 
-  MLHandKeyPointAnalyzerSetting(
-      {required this.path, this.maxHandResults, this.sceneType});
+  MLHandKeyPointAnalyzerSetting({
+    required this.path,
+    this.maxHandResults,
+    this.sceneType,
+  });
 
   Map<String, dynamic> toMap() {
-    return {
-      "path": path,
-      "sceneType": sceneType ?? typeAll,
-      "maxHandResults": maxHandResults ?? maxHandsNum
+    return <String, dynamic>{
+      'path': path,
+      'sceneType': sceneType ?? typeAll,
+      'maxHandResults': maxHandResults ?? maxHandsNum,
     };
   }
 }

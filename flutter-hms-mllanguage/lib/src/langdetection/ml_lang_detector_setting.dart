@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,10 +14,18 @@
     limitations under the License.
 */
 
+part of '../../huawei_ml_language.dart';
+
 class MLLangDetectorSetting {
   String sourceText;
   double? trustedThreshold;
   bool? isRemote;
+
+  MLLangDetectorSetting._({
+    required this.sourceText,
+    this.isRemote,
+    this.trustedThreshold,
+  });
 
   factory MLLangDetectorSetting.create({
     required String sourceText,
@@ -31,17 +39,11 @@ class MLLangDetectorSetting {
     );
   }
 
-  MLLangDetectorSetting._({
-    required this.sourceText,
-    this.isRemote,
-    this.trustedThreshold,
-  });
-
   Map<String, dynamic> toMap() {
-    return {
-      "sourceText": sourceText,
-      "trustedThreshold": trustedThreshold ?? 0.5,
-      "isRemote": isRemote ?? true
+    return <String, dynamic>{
+      'sourceText': sourceText,
+      'trustedThreshold': trustedThreshold ?? 0.5,
+      'isRemote': isRemote ?? true,
     };
   }
 }

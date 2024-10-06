@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,25 +14,23 @@
     limitations under the License.
 */
 
-import 'ml_remote_aft_result.dart';
-
-part 'aft_callbacks.dart';
+part of '../../huawei_ml_language.dart';
 
 class MLRemoteAftListener {
   /// Called if an audio transcription error occurs.
-  _OnError onError;
+  void Function(String taskId, int errCode, String errMsg) onError;
 
-  /// Reserved.
-  _OnEvent onEvent;
+  /// Reserved for long audio.
+  void Function(String taskId, int eventId) onEvent;
 
-  /// Reserved.
-  _OnInitComplete onInitComplete;
+  /// Reserved for long audio.
+  void Function(String taskId) onInitComplete;
 
   /// Called when the audio transcription result is returned on the cloud.
-  _OnResult onResult;
+  void Function(String taskId, MLRemoteAftResult result) onResult;
 
-  /// Reserved.
-  _OnUploadProgress onUploadProgress;
+  /// Reserved for long audio.
+  Function(String taskId, double progress) onUploadProgress;
 
   MLRemoteAftListener(
     this.onError,

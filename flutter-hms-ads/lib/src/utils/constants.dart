@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
     limitations under the License.
 */
 
-part of huawei_ads;
+part of '../../huawei_ads.dart';
 
 class ActivateStyle {
   /// Banner at the bottom.
@@ -59,21 +59,6 @@ class AdParamErrorCode {
 
   final int value;
   const AdParamErrorCode._(this.value);
-}
-
-class AudioFocusType {
-  /// Obtains the audio focus when a video is played, no matter whether the video is muted.
-  static const AudioFocusType GAIN_AUDIO_FOCUS_ALL = AudioFocusType._(0);
-
-  /// Obtains the audio focus only when a video is played without being muted.
-  static const AudioFocusType NOT_GAIN_AUDIO_FOCUS_WHEN_MUTE =
-      AudioFocusType._(1);
-
-  /// Does not obtain the audio focus when a video is played, no matter whether the video is muted.
-  static const AudioFocusType NOT_GAIN_AUDIO_FOCUS_ALL = AudioFocusType._(2);
-
-  final int value;
-  const AudioFocusType._(this.value);
 }
 
 class ContentClassification {

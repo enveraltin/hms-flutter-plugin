@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,12 +14,11 @@
     limitations under the License.
 */
 
+part of '../../huawei_ml_body.dart';
+
 abstract class MLBodyAnalyzer<T, K> {
   Future<List<T>> asyncAnalyseFrame(K k);
-
   Future<List<T>> analyseFrame(K k);
-
   Future<bool> isAvailable();
-
   Future<bool> destroy();
 }

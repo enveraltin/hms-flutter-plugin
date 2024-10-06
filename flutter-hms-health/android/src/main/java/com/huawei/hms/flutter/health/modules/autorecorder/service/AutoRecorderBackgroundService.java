@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import static com.huawei.hms.flutter.health.modules.autorecorder.utils.AutoRecor
 import static com.huawei.hms.flutter.health.modules.autorecorder.utils.AutoRecorderConstants.TICKER;
 import static com.huawei.hms.flutter.health.modules.autorecorder.utils.AutoRecorderConstants.TITLE;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -174,14 +175,14 @@ public class AutoRecorderBackgroundService extends Service {
         // Start recording real-time steps.
         Log.i(TAG, "getRemoteService");
         autoRecorderController.startRecord(datatype, samplePoint -> {
-            // The step count, time, and type data reported by the pedometer is called back to the app through
-            // samplePoint.
-            Intent intent = new Intent();
-            intent.putExtra("SamplePoint", samplePoint);
-            intent.setAction(BACKGROUND_SERVICE);
-            // Transmits service data to activities through broadcast.
-            sendBroadcast(intent);
-        })
+                // The step count, time, and type data reported by the pedometer is called back to the app through
+                // samplePoint.
+                Intent intent = new Intent();
+                intent.putExtra("SamplePoint", samplePoint);
+                intent.setAction(BACKGROUND_SERVICE);
+                // Transmits service data to activities through broadcast.
+                sendBroadcast(intent, Manifest.permission.FOREGROUND_SERVICE);
+            })
             .addOnSuccessListener(aVoid -> Log.i(TAG, "record steps success."))
             .addOnFailureListener(e -> Log.i(TAG, "report steps failed."));
     }

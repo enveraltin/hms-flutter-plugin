@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -114,41 +114,33 @@ public class AftHandler implements MethodChannel.MethodCallHandler {
     }
 
     private void shortRecognize(@NonNull MethodCall call) {
-        String voicePath = FromMap.toString("path", call.argument("path"), false);
-
-        if (voicePath == null || voicePath.isEmpty()) {
+        final String shortVoicePath = FromMap.toString("path", call.argument("path"), false);
+        if (shortVoicePath == null || shortVoicePath.isEmpty()) {
             rspHandler.exception(new Exception("Audio path must not be null or empty"));
             return;
         }
-
-        MLRemoteAftSetting setting = RequestBuilder.createAftSetting(call);
-
+        final MLRemoteAftSetting setting = RequestBuilder.createAftSetting(call);
         engine = MLRemoteAftEngine.getInstance();
         engine.init(activity);
         engine.setAftListener(new AftListenerImpl(activity, mChannel));
 
-        Uri uri = Uri.fromFile(new File(voicePath));
-
-        engine.shortRecognize(uri, setting);
+        final Uri shortUri = Uri.fromFile(new File(shortVoicePath));
+        engine.shortRecognize(shortUri, setting);
     }
 
     private void longRecognize(@NonNull MethodCall call) {
-        String voicePath1 = FromMap.toString("path", call.argument("path"), false);
-
-        if (voicePath1 == null || voicePath1.isEmpty()) {
+        final String longVoicePath = FromMap.toString("path", call.argument("path"), false);
+        if (longVoicePath == null || longVoicePath.isEmpty()) {
             rspHandler.exception(new Exception("Audio path must not be null or empty!"));
             return;
         }
-
-        MLRemoteAftSetting setting1 = RequestBuilder.createAftSetting(call);
-
+        final MLRemoteAftSetting setting1 = RequestBuilder.createAftSetting(call);
         engine = MLRemoteAftEngine.getInstance();
         engine.init(activity);
         engine.setAftListener(new AftListenerImpl(activity, mChannel));
 
-        Uri uri1 = Uri.fromFile(new File(voicePath1));
-
-        engine.longRecognize(uri1, setting1);
+        final Uri longUri = Uri.fromFile(new File(longVoicePath));
+        engine.longRecognize(longUri, setting1);
     }
 
     private void startTask(@NonNull MethodCall call) {

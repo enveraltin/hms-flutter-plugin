@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -28,11 +28,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * MapUtil exposes a set of helper methods for working with {@link HashMap}, {@link Map}.
- *
- * @since v.5.0.5
- */
 public final class MapUtils {
     private static final Gson GSON = createGson();
 

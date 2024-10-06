@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,13 +14,10 @@
     limitations under the License.
 */
 
-import 'package:flutter/services.dart';
-import 'package:huawei_ml_body/src/common/constants.dart';
-import 'package:huawei_ml_body/src/result/ml_liveness_capture_result.dart';
+part of '../../huawei_ml_body.dart';
 
 class MLLivenessCapture {
   static const int startDetectFace = 1;
-
   static const int startDetectLiveness = 2;
 
   /// The camera permission is not obtained.
@@ -34,6 +31,9 @@ class MLLivenessCapture {
 
   /// The operation is canceled by the user.
   static const int userCancel = 11403;
+
+  /// The user-defined action is invalid.
+  static const int userDefinedActionsInvalid = 11405;
 
   /// Sets whether to detect the mask.
   static const int detectMask = 1;
@@ -50,8 +50,16 @@ class MLLivenessCapture {
     _channel = const MethodChannel('$baseChannel.liveness');
   }
 
-  Future<MLLivenessCaptureResult> startDetect({bool? detectMask}) async {
-    return MLLivenessCaptureResult.fromJson(await _channel.invokeMethod(
-        "liveness#startDetect", {'detectMask': detectMask ?? true}));
+  Future<MLLivenessCaptureResult> startDetect({
+    bool? detectMask,
+  }) async {
+    return MLLivenessCaptureResult.fromJson(
+      await _channel.invokeMethod(
+        'liveness#startDetect',
+        <String, dynamic>{
+          'detectMask': detectMask ?? true,
+        },
+      ),
+    );
   }
 }

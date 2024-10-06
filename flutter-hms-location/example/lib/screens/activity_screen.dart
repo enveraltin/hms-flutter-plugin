@@ -1,55 +1,50 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
-
-    Licensed under the Apache License, Version 2.0 (the "License")
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-*/
+ * Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 import 'package:flutter/material.dart';
-import 'package:huawei_location/permission/permission_handler.dart';
 
-import '../screens/activity_conversion_screen.dart';
-import '../screens/activity_identification_screen.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/custom_row.dart';
+import 'package:huawei_location_example/screens/activity_conversion_screen.dart';
+import 'package:huawei_location_example/screens/activity_identification_screen.dart';
+import 'package:huawei_location_example/widgets/custom_button.dart';
 
 class ActivityScreen extends StatefulWidget {
-  static const String ROUTE_NAME = "ActivityScreen";
+  static const String ROUTE_NAME = 'ActivityScreen';
+
+  const ActivityScreen({Key? key}) : super(key: key);
 
   @override
-  _ActivityScreenState createState() => _ActivityScreenState();
+  State<ActivityScreen> createState() => _ActivityScreenState();
 }
 
 class _ActivityScreenState extends State<ActivityScreen> {
-  final PermissionHandler _permissionHandler = PermissionHandler();
+  String _topText = '';
 
-  String _topText = "";
-
-  void _hasPermission() async {
-    final bool status =
-        await _permissionHandler.hasActivityRecognitionPermission();
-    _setTopText("Has permission: $status");
+  @override
+  void initState() {
+    super.initState();
+    _requestPermission();
   }
 
+  // TODO: Please implement your own 'Permission Handler'.
   void _requestPermission() async {
-    final bool status =
-        await _permissionHandler.requestActivityRecognitionPermission();
-    _setTopText("Is permission granted: $status");
-  }
+    // Huawei Location needs some permissions to work properly.
+    // You are expected to handle these permissions to use Huawei Location Demo.
 
-  void _setTopText([String text = ""]) {
-    setState(() {
-      _topText = text;
-    });
+    // You can learn more about the required permissions from our official documentations.
+    // https://developer.huawei.com/consumer/en/doc/development/HMS-Plugin-Guides/dev-process-0000001089376648?ha_source=hms1
   }
 
   @override
@@ -59,32 +54,28 @@ class _ActivityScreenState extends State<ActivityScreen> {
         title: const Text('Activity Identification and Conversion'),
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 top: 10,
               ),
               height: 90,
               child: Text(_topText),
             ),
-            Divider(
+            const Divider(
               thickness: 0.1,
               color: Colors.black,
             ),
-            CRow(children: <Widget>[
-              Btn("hasPermission", _hasPermission),
-              Btn("requestPermission", _requestPermission),
-            ]),
-            Btn("Activity Identification", () {
+            Btn('Activity Identification', () {
               Navigator.pushNamed(
                 context,
                 ActivityIdentificationScreen.ROUTE_NAME,
               );
             }),
-            Btn("Activity Conversion", () {
+            Btn('Activity Conversion', () {
               Navigator.pushNamed(
                 context,
                 ActivityConversionScreen.ROUTE_NAME,

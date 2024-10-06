@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,10 +14,21 @@
     limitations under the License.
 */
 
-part of huawei_adsprime;
+part of '../../../huawei_adsprime.dart';
 
 class RewardVerifyConfig {
+  /// User ID.
+  ///
+  /// `NOTE:`
+  /// This is a user ID of a rewarded ad. This parameter can be combined with a URL and then the URL is encoded.
+  /// In this case, the URL length cannot exceed 1024 bytes. Otherwise, the server-side verification is affected.
   String? userId;
+
+  /// Custom data.
+  ///
+  /// `NOTE:`
+  /// This is a custom parameter of a rewarded ad. This parameter can be combined with a URL and then the URL is encoded.
+  /// In this case, the URL length cannot exceed 1024 bytes. Otherwise, the server-side verification is affected.
   String? data;
 
   RewardVerifyConfig({

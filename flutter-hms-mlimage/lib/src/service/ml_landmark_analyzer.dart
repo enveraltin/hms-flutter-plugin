@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,27 +14,28 @@
     limitations under the License.
 */
 
-import 'package:flutter/services.dart';
-import 'package:huawei_ml_image/src/common/constants.dart';
-import 'package:huawei_ml_image/src/common/method.dart';
-import 'package:huawei_ml_image/src/request/ml_landmark_analyzer_setting.dart';
-import 'package:huawei_ml_image/src/result/ml_landmark.dart';
+part of huawei_ml_image;
 
 class MLLandmarkAnalyzer {
   late MethodChannel _methodChannel;
 
   MLLandmarkAnalyzer() {
-    _methodChannel = MethodChannel("$baseChannel.landmark");
+    _methodChannel = const MethodChannel('$baseChannel.landmark');
   }
 
   Future<List<MLRemoteLandmark>> asyncAnalyseFrame(
-      MLLandmarkAnalyzerSetting setting) async {
-    List res =
-        await _methodChannel.invokeMethod(mAsyncAnalyzeFrame, setting.toMap());
-    return res.map((e) => MLRemoteLandmark.fromMap(e)).toList();
+    MLLandmarkAnalyzerSetting setting,
+  ) async {
+    final List<dynamic> res = await _methodChannel.invokeMethod(
+      mAsyncAnalyzeFrame,
+      setting.toMap(),
+    );
+    return res.map((dynamic e) => MLRemoteLandmark.fromMap(e)).toList();
   }
 
   Future<bool> stopLandmarkDetection() async {
-    return await _methodChannel.invokeMethod(mStop);
+    return await _methodChannel.invokeMethod(
+      mStop,
+    );
   }
 }

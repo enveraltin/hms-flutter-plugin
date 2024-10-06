@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
     limitations under the License.
 */
 
-import 'ml_border.dart';
+part of huawei_ml_image;
 
 class MLObject {
   /// Object type 0: others
@@ -38,20 +38,25 @@ class MLObject {
   /// Object type 6: faces
   static const int TYPE_FACE = 6;
 
-  MLImageBorder? border;
-  dynamic possibility;
-  int? type;
-  int? tracingIdentity;
+  final MLImageBorder? border;
+  final dynamic possibility;
+  final int? type;
+  final int? tracingIdentity;
 
-  MLObject({this.border, this.possibility, this.type, this.tracingIdentity});
+  const MLObject._({
+    this.border,
+    this.possibility,
+    this.type,
+    this.tracingIdentity,
+  });
 
   factory MLObject.fromMap(Map<dynamic, dynamic> map) {
-    return MLObject(
-        border: map['border'] != null
-            ? new MLImageBorder.fromMap(map['border'])
-            : null,
-        possibility: map['possibility'] ?? null,
-        type: map['type'] ?? null,
-        tracingIdentity: map['tracingIdentity'] ?? null);
+    return MLObject._(
+      border:
+          map['border'] != null ? MLImageBorder.fromMap(map['border']) : null,
+      possibility: map['possibility'],
+      type: map['type'],
+      tracingIdentity: map['tracingIdentity'],
+    );
   }
 }

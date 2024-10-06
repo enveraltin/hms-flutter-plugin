@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -79,6 +79,8 @@ public final class HealthRecordUtils {
             return ((Integer) value).longValue();
         } else if (value instanceof Double) {
             return ((Double) value).longValue();
+        } else if (value instanceof String) {
+            return Long.parseLong((String) value);
         } else {
             Log.w("HealthRecordUtils", "toLong | Long value expected for " + key);
             return null;
@@ -314,13 +316,8 @@ public final class HealthRecordUtils {
     }
 
     private static SamplePoint buildSamplePoint(Map<String, Object> map) {
-        // ! get fields from dataCollector:
-        // ?    dataCollector.getDataType().getFields()
-        // ! @map contains a key called 'pairs':
-        // ?    iterate through fields of @dataCollector
-        // ?    set value of the fields if @map has them
-
         Map<String, Object> dcMap = fromObject(map.get("dataCollector"));
+        Map<String, Object> dtMap = fromObject(map.get("dataType"));
         Map<String, Object> pairMap = fromObject(map.get("pairs"));
         String packageName = toString("packageName", dcMap.get("packageName"), false);
 
@@ -336,8 +333,17 @@ public final class HealthRecordUtils {
 
         List<Map<String, Object>> metadataValues = toMapArrayList("metadataValues", map.get("metadataValues"));
 
-        DataCollector dataCollector = Utils.toDataCollector(dcMap, packageName);
-        SamplePoint.Builder builder = new SamplePoint.Builder(dataCollector);
+        SamplePoint.Builder builder;
+        List<Field> fields;
+        if (!dcMap.isEmpty()) {
+            final DataCollector dataCollector = Utils.toDataCollector(dcMap, packageName);
+            fields = dataCollector.getDataType().getFields();
+            builder = new SamplePoint.Builder(dataCollector);
+        } else {
+            final DataType dataType = Utils.toDataType(dtMap, packageName);
+            fields = dataType.getFields();
+            builder = new SamplePoint.Builder(dataType);
+        }
 
         if (startTime != null && endTime != null) {
             builder.setTimeInterval(startTime, endTime, timeUnit);
@@ -352,7 +358,7 @@ public final class HealthRecordUtils {
             builder.setMetadata(metadata);
         }
         SamplePoint samplePoint = builder.build();
-        for (Field field : dataCollector.getDataType().getFields()) {
+        for (Field field : fields) {
             if (pairMap.containsKey(field.getName())) {
                 setFieldValues(samplePoint, field, pairMap.get(field.getName()));
             }
@@ -380,33 +386,25 @@ public final class HealthRecordUtils {
 
     private static SampleSet buildSampleSet(Map<String, Object> map) {
         Map<String, Object> dcMap = fromObject(map.get("dataCollector"));
-        Map<String, Object> pairs = fromObject(map.get("pairs"));
-        Long startTime = toLong("startTime", map.get("startTime"));
-        Long endTime = toLong("endTime", map.get("endTime"));
-        String timeUnitStr = toString("timeUnit", map.get("timeUnit"), false);
-        TimeUnit timeUnit = Utils.toTimeUnit(timeUnitStr);
-        String packageName = toString("packageName", dcMap.get("packageName"), false);
-
         if (dcMap.isEmpty()) {
             throw new InvalidParameterException("DataCollector must not be null");
         }
+
+        String packageName = toString("packageName", dcMap.get("packageName"), false);
+        List<Map<String, Object>> samplePointList = (List<Map<String, Object>>) map.get("samplePoints");
+
         DataCollector collector = Utils.toDataCollector(dcMap, packageName);
-        SampleSet set = SampleSet.create(collector);
-        SamplePoint samplePoint = set.createSamplePoint();
-        if (startTime != null && endTime != null) {
-            samplePoint.setTimeInterval(startTime, endTime, timeUnit);
+        SampleSet sampleSet = SampleSet.create(collector);
+
+        for (Map<String, Object> rawSamplePoint : samplePointList) {
+            SamplePoint samplePoint = buildSamplePoint(rawSamplePoint);
+            sampleSet.addSample(samplePoint);
         }
-        for (Field field : set.getDataCollector().getDataType().getFields()) {
-            if (pairs.containsKey(field.getName())) {
-                Log.i("field name", field.getName());
-                Log.i("field value ", String.valueOf(pairs.get(field.getName())));
-                setFieldValues(samplePoint, field, pairs.get(field.getName()));
-            }
-        }
-        return set;
+
+        return sampleSet;
     }
 
-    private static void setFieldValues(SamplePoint samplePoint, Field field, Object value) {
+    public static void setFieldValues(SamplePoint samplePoint, Field field, Object value) {
         Value val = samplePoint.getFieldValue(field);
         if (value instanceof Integer) {
             val.setIntValue((Integer) value);

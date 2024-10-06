@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
     limitations under the License.
 */
 
-part of huawei_adsprime;
+part of '../../huawei_adsprime.dart';
 
 class HwAds {
   /// Initializes the HUAWEI Ads SDK.
@@ -103,12 +103,14 @@ class HwAds {
     );
   }
 
+  /// Enables the HMSLogger capability which is used for sending usage analytics of Ads SDK's methods to improve the service quality.
   static Future<bool?> enableLogger() async {
     return await Ads.instance.channel.invokeMethod(
       'enableLogger',
     );
   }
 
+  /// Disables the HMSLogger capability which is used for sending usage analytics of Ads SDK's methods to improve the service quality.
   static Future<bool?> disableLogger() async {
     return await Ads.instance.channel.invokeMethod(
       'disableLogger',

@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,9 +14,11 @@
     limitations under the License.
 */
 
+part of '../../huawei_ml_language.dart';
+
 class MLRemoteAftSetting {
-  static const String LANGUAGE_ZH = "zh";
-  static const String LANGUAGE_EN_US = "en-US";
+  static const String LANGUAGE_ZH = 'zh';
+  static const String LANGUAGE_EN_US = 'en-US';
 
   String path;
   String? language;
@@ -33,12 +35,12 @@ class MLRemoteAftSetting {
   });
 
   Map<String, dynamic> toMap() {
-    return {
-      "path": path,
-      "language": language ?? LANGUAGE_EN_US,
-      "enablePunctuation": enablePunctuation ?? false,
-      "enableWordTimeOffset": enableWordTimeOffset ?? false,
-      "enableSentenceTimeOffset": enableSentenceTimeOffset ?? false,
+    return <String, dynamic>{
+      'path': path,
+      'language': language ?? LANGUAGE_EN_US,
+      'enablePunctuation': enablePunctuation ?? false,
+      'enableWordTimeOffset': enableWordTimeOffset ?? false,
+      'enableSentenceTimeOffset': enableSentenceTimeOffset ?? false,
     };
   }
 }

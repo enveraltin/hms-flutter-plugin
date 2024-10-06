@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,12 +14,14 @@
     limitations under the License.
 */
 
-part of huawei_adsprime;
+part of '../../../huawei_adsprime.dart';
 
 class DislikeAdReason {
+  /// Contains the reason why a user dislikes an ad.
   final String _description;
 
   const DislikeAdReason(this._description);
 
+  /// Reason why a user dislikes an ad.
   String get getDescription => _description;
 }

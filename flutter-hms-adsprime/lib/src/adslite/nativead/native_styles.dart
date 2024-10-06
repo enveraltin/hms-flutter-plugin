@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
     limitations under the License.
 */
 
-part of huawei_adsprime;
+part of '../../../huawei_adsprime.dart';
 
 class _Key {
   static const String visibility = 'visibility';
@@ -24,6 +24,7 @@ class _Key {
   static const String bgColor = 'backgroundColor';
 }
 
+/// Enumerated object that represents the available font weights and styles for text.
 enum NativeFontWeight {
   normal,
   bold,

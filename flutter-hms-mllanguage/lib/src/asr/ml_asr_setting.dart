@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,20 +14,24 @@
     limitations under the License.
 */
 
-import 'ml_asr_constants.dart';
+part of '../../huawei_ml_language.dart';
 
 class MLAsrSetting {
   String? language;
   String? scene;
   int? feature;
 
-  MLAsrSetting({this.scene, this.language, this.feature});
+  MLAsrSetting({
+    this.scene,
+    this.language,
+    this.feature,
+  });
 
   Map<String, dynamic> toMap() {
-    return {
-      "language": language ?? MLAsrConstants.LAN_EN_US,
-      "scene": scene ?? MLAsrConstants.SCENES,
-      "feature": feature ?? MLAsrConstants.FEATURE_WORDFLUX
+    return <String, dynamic>{
+      'language': language ?? MLAsrConstants.LAN_EN_US,
+      'scene': scene ?? MLAsrConstants.SCENES,
+      'feature': feature ?? MLAsrConstants.FEATURE_WORDFLUX,
     };
   }
 }

@@ -1,36 +1,36 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
-
-    Licensed under the Apache License, Version 2.0 (the "License")
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-*/
+ * Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:huawei_location/activity/activity_identification_data.dart';
-import 'package:huawei_location/activity/activity_identification_response.dart';
-import 'package:huawei_location/activity/activity_identification_service.dart';
+import 'package:huawei_location/huawei_location.dart';
 
-import '../widgets/custom_button.dart';
-import '../widgets/custom_progressbar.dart';
+import 'package:huawei_location_example/widgets/custom_button.dart';
+import 'package:huawei_location_example/widgets/custom_progressbar.dart';
 
 class ActivityIdentificationScreen extends StatefulWidget {
-  static const String ROUTE_NAME = "ActivityIdentificationScreen";
+  static const String ROUTE_NAME = 'ActivityIdentificationScreen';
+
+  const ActivityIdentificationScreen({Key? key}) : super(key: key);
 
   @override
-  _ActivityIdentificationScreenState createState() =>
+  State<ActivityIdentificationScreen> createState() =>
       _ActivityIdentificationScreenState();
 }
 
@@ -41,8 +41,8 @@ class _ActivityIdentificationScreenState
 
   int? _requestCode;
 
-  String _topText = "";
-  String _bottomText = "";
+  String _topText = '';
+  String _bottomText = '';
 
   int _progressVehicle = 0;
   int _progressBike = 0;
@@ -58,6 +58,7 @@ class _ActivityIdentificationScreenState
   @override
   void initState() {
     super.initState();
+    _initFusedLocationService();
     _streamSubscription =
         _service.onActivityIdentification.listen(_onIdentificationResponse);
   }
@@ -131,36 +132,45 @@ class _ActivityIdentificationScreenState
     }
   }
 
-  void _setTopText([String text = ""]) {
+  void _setTopText([String text = '']) {
     setState(() {
       _topText = text;
     });
   }
 
-  void _setBottomText([String text = ""]) {
+  void _setBottomText([String text = '']) {
     setState(() {
       _bottomText = text;
     });
   }
 
-  void _appendBottomText([String text = ""]) {
+  void _appendBottomText([String text = '']) {
     setState(() {
-      _bottomText = "$_bottomText\n\n$text";
+      _bottomText = '$_bottomText\n\n$text';
     });
+  }
+
+  void _initFusedLocationService() async {
+    try {
+      await _service.initActivityIdentificationService();
+      _setTopText('Activity Identification Service has been initialized.');
+    } on PlatformException catch (e) {
+      _setBottomText(e.toString());
+    }
   }
 
   void _createActivityIdentificationUpdates() async {
     if (_requestCode == null) {
       try {
-        final int _responseRequestCode =
+        final int responseRequestCode =
             await _service.createActivityIdentificationUpdates(1000);
-        _requestCode = _responseRequestCode;
-        _setTopText("Created Activity Identification Updates successfully.");
+        _requestCode = responseRequestCode;
+        _setTopText('Created Activity Identification Updates successfully.');
       } on PlatformException catch (e) {
         _setTopText(e.toString());
       }
     } else {
-      _setTopText("Already receiving Activity Identification Updates.");
+      _setTopText('Already receiving Activity Identification Updates.');
     }
   }
 
@@ -171,12 +181,12 @@ class _ActivityIdentificationScreenState
         _requestCode = null;
         _resetProgressBars();
         _setBottomText();
-        _setTopText("Deleted Activity Identification Updates successfully.");
+        _setTopText('Deleted Activity Identification Updates successfully.');
       } on PlatformException catch (e) {
         _setTopText(e.toString());
       }
     } else {
-      _setTopText("Create Activity Identification Updates first.");
+      _setTopText('Create Activity Identification Updates first.');
     }
   }
 
@@ -194,82 +204,87 @@ class _ActivityIdentificationScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Activity Identification'),
+      appBar: AppBar(
+        title: const Text('Activity Identification'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.only(top: 15, bottom: 6),
+              child: Text(_topText),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Btn(
+                    'createActivityIdentificationUpdates',
+                    _createActivityIdentificationUpdates,
+                  ),
+                  Btn(
+                    'deleteActivityIdentificationUpdates',
+                    _deleteActivityIdentificationUpdates,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: Column(
+                      children: <Widget>[
+                        ProgressBar(
+                          label: 'VEHICLE[100]',
+                          value: _progressVehicle,
+                          color: Colors.redAccent,
+                        ),
+                        ProgressBar(
+                          label: 'BIKE[101]',
+                          value: _progressBike,
+                          color: Colors.black54,
+                        ),
+                        ProgressBar(
+                          label: 'FOOT[102]',
+                          value: _progressFoot,
+                          color: Colors.pinkAccent,
+                        ),
+                        ProgressBar(
+                          label: 'STILL[103]',
+                          value: _progressStill,
+                          color: Colors.red,
+                        ),
+                        ProgressBar(
+                          label: 'OTHERS[104]',
+                          value: _progressOthers,
+                          color: Colors.blueGrey,
+                        ),
+                        ProgressBar(
+                          label: 'TILTING[105]',
+                          value: _progressTilting,
+                          color: Colors.amber,
+                        ),
+                        ProgressBar(
+                          label: 'WALKING[107]',
+                          value: _progressWalking,
+                          color: Colors.deepPurple,
+                        ),
+                        ProgressBar(
+                          label: 'RUNNING[108]',
+                          value: _progressRunning,
+                          color: Colors.lightBlue,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(_bottomText),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(top: 15, bottom: 6),
-                child: Text(_topText),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Btn("createActivityIdentificationUpdates",
-                        _createActivityIdentificationUpdates),
-                    Btn("deleteActivityIdentificationUpdates",
-                        _deleteActivityIdentificationUpdates),
-                    Container(
-                      padding: EdgeInsets.only(top: 15),
-                      child: Column(
-                        children: <Widget>[
-                          ProgressBar(
-                            label: "VEHICLE[100]",
-                            value: _progressVehicle,
-                            color: Colors.redAccent,
-                          ),
-                          ProgressBar(
-                            label: "BIKE[101]",
-                            value: _progressBike,
-                            color: Colors.black54,
-                          ),
-                          ProgressBar(
-                            label: "FOOT[102]",
-                            value: _progressFoot,
-                            color: Colors.pinkAccent,
-                          ),
-                          ProgressBar(
-                            label: "STILL[103]",
-                            value: _progressStill,
-                            color: Colors.red,
-                          ),
-                          ProgressBar(
-                            label: "OTHERS[104]",
-                            value: _progressOthers,
-                            color: Colors.blueGrey,
-                          ),
-                          ProgressBar(
-                            label: "TILTING[105]",
-                            value: _progressTilting,
-                            color: Colors.amber,
-                          ),
-                          ProgressBar(
-                            label: "WALKING[107]",
-                            value: _progressWalking,
-                            color: Colors.deepPurple,
-                          ),
-                          ProgressBar(
-                            label: "RUNNING[108]",
-                            value: _progressRunning,
-                            color: Colors.lightBlue,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(top: 5),
-                      child: Text(_bottomText),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ));
+      ),
+    );
   }
 
   @override

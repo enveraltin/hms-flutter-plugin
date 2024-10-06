@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,15 +14,18 @@
     limitations under the License.
 */
 
-part of huawei_adsprime;
+part of '../../../huawei_adsprime.dart';
 
 class Consent {
   Consent._();
   static final Consent _instance = Consent._();
-  static Consent get instance => _instance;
   late ConsentUpdateListener _listener;
   StreamSubscription<dynamic>? _listenerSub;
 
+  /// Returns a singleton [Consent] instance.
+  static Consent get instance => _instance;
+
+  /// Obtains the test device ID. (For test.)
   Future<String?> getTestDeviceId() async {
     final String? deviceId = await Ads.instance.channelConsent.invokeMethod(
       'getTestDeviceId',
@@ -30,6 +33,7 @@ class Consent {
     return deviceId;
   }
 
+  /// Adds a new test device ID. (For test.)
   Future<bool?> addTestDeviceId(String deviceId) async {
     return await Ads.instance.channelConsent.invokeMethod(
       'addTestDeviceId',
@@ -137,6 +141,7 @@ typedef ConsentUpdateListener = void Function(
   String? description,
 });
 
+/// [Events] of a consent update attempt.
 enum ConsentUpdateEvent {
   success,
   failed,

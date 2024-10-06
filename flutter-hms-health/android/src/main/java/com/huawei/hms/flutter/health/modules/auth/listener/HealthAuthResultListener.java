@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,6 @@ package com.huawei.hms.flutter.health.modules.auth.listener;
 import com.huawei.hms.flutter.health.foundation.listener.ResultListener;
 import com.huawei.hms.support.hwid.result.AuthHuaweiId;
 
-/**
- * LoginResultListener returns {@link AuthHuaweiId} instance.
- *
- * @since v.5.0.5
- */
 public interface HealthAuthResultListener extends ResultListener<AuthHuaweiId> {
-    /**
-     * Presents the silent sign in scenario.
-     */
     void onSilentSignInFail();
 }

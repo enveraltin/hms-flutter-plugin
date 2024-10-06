@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,14 +14,24 @@
     limitations under the License.
 */
 
-class BodyPosition {
-  dynamic x;
-  dynamic y;
-  dynamic z;
+part of '../../huawei_ml_body.dart';
 
-  BodyPosition({this.x, this.y, this.z});
+class BodyPosition {
+  final double? x;
+  final double? y;
+  final double? z;
+
+  const BodyPosition._({
+    required this.x,
+    required this.y,
+    required this.z,
+  });
 
   factory BodyPosition.fromMap(Map<dynamic, dynamic> map) {
-    return BodyPosition(x: map['x'], y: map['y'], z: map['z']);
+    return BodyPosition._(
+      x: map['x'],
+      y: map['y'],
+      z: map['z'],
+    );
   }
 }

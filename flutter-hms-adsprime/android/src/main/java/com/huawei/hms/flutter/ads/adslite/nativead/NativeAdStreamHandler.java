@@ -1,18 +1,18 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
-
-    Licensed under the Apache License, Version 2.0 (the "License")
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-*/
+ * Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package com.huawei.hms.flutter.ads.adslite.nativead;
 
@@ -20,16 +20,21 @@ import android.content.Context;
 import android.util.Log;
 
 import com.huawei.hms.ads.AdListener;
+import com.huawei.hms.ads.VideoConfiguration;
 import com.huawei.hms.ads.VideoOperator;
 import com.huawei.hms.ads.nativead.DislikeAdListener;
 import com.huawei.hms.ads.nativead.NativeAd;
+import com.huawei.hms.flutter.ads.factory.VideoConfigurationFactory;
 import com.huawei.hms.flutter.ads.logger.HMSLogger;
 import com.huawei.hms.flutter.ads.utils.ToMap;
 
 import io.flutter.plugin.common.EventChannel;
 
+import java.util.Map;
+
 public class NativeAdStreamHandler implements EventChannel.StreamHandler {
     private static final String TAG = "NativeAdStreamHandler";
+
     private final Context context;
 
     public NativeAdStreamHandler(Context context) {
@@ -55,7 +60,9 @@ public class NativeAdStreamHandler implements EventChannel.StreamHandler {
 
     static class NativeAdLoadedListenerImpl implements NativeAd.NativeAdLoadedListener {
         private EventChannel.EventSink event;
+
         private NativeAdController controller;
+
         private final Context context;
 
         NativeAdLoadedListenerImpl(NativeAdController controller, EventChannel.EventSink event, Context context) {
@@ -67,6 +74,13 @@ public class NativeAdStreamHandler implements EventChannel.StreamHandler {
         @Override
         public void onNativeAdLoaded(NativeAd nativeAd) {
             Log.i(TAG, "onNativeAdLoaded");
+            Map<String, Object> videoConfigurationMap = NativeAdController.videoConfigurationMap;
+            if (!videoConfigurationMap.isEmpty()) {
+                VideoConfigurationFactory videoConFactory = new VideoConfigurationFactory(videoConfigurationMap);
+                VideoConfiguration videoConfiguration = videoConFactory.createVideoConfiguration();
+                nativeAd.setVideoConfiguration(videoConfiguration);
+                Log.i(TAG, "video configuration set");
+            }
             nativeAd.setDislikeAdListener(new DislikeAdListener() {
                 @Override
                 public void onAdDisliked() {
@@ -130,6 +144,7 @@ public class NativeAdStreamHandler implements EventChannel.StreamHandler {
 
     static class AdListenerImpl extends AdListener {
         private final Context context;
+
         private EventChannel.EventSink event;
 
         AdListenerImpl(Context context, EventChannel.EventSink event) {

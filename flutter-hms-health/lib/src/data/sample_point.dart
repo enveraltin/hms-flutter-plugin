@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -47,24 +47,27 @@ class SamplePoint {
 
   FieldValueOptions? fieldValueOptions;
   Map<String, dynamic>? _fieldValues;
-  final DataCollector dataCollector;
+  final DataCollector? dataCollector;
+  final DataType? dataType;
   int? _dataTypeId;
-  DataType? _dataType;
   final List<Map<String, dynamic>> _metaDataValues = <Map<String, dynamic>>[];
 
   Map<String, dynamic> pairs = <String, dynamic>{};
 
+  /// You must set dataCollector or dataType.
   SamplePoint({
+    this.dataCollector,
+    this.dataType,
     this.id,
     this.startTime,
     this.endTime,
     this.samplingTime,
     this.fieldValueOptions,
     this.timeUnit = TimeUnit.MILLISECONDS,
-    required this.dataCollector,
     this.metadata,
-  }) {
-    for (Field field in dataCollector.dataType?.fields ?? <Field>[]) {
+  }) : assert(dataCollector != null || dataType != null) {
+    for (Field field
+        in dataCollector?.dataType?.fields ?? dataType?.fields ?? <Field>[]) {
       pairs[field.name] = null;
     }
   }
@@ -79,7 +82,7 @@ class SamplePoint {
 
   int? get getDataTypeId => _dataTypeId;
 
-  DataType? get getDataType => _dataType;
+  DataType? get getDataType => dataType;
 
   /// Sets the sampling timestamp of instantaneous data.
   void setSamplingTime(DateTime timestamp, TimeUnit timeUnit) {
@@ -126,7 +129,11 @@ class SamplePoint {
       samplingTime: map['samplingTime'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['samplingTime'])
           : null,
-      dataCollector: DataCollector.fromMap(map['dataCollector']),
+      dataCollector: map['dataCollector'] != null
+          ? DataCollector.fromMap(map['dataCollector'])
+          : null,
+      dataType:
+          map['dataType'] != null ? DataType.fromMap(map['dataType']) : null,
     );
     if (map['insertionTime'] != null) {
       instance._insertionTime =
@@ -138,25 +145,22 @@ class SamplePoint {
     if (map['dataTypeId'] != null) {
       instance._dataTypeId = map['dataTypeId'];
     }
-    if (map['dataType'] != null) {
-      instance._dataType = DataType.fromMap(map['dataType']);
-    }
     return instance;
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'startTime': startTime?.millisecondsSinceEpoch,
-      'endTime': endTime?.millisecondsSinceEpoch,
-      'samplingTime': samplingTime?.millisecondsSinceEpoch,
+      'startTime': startTime?.millisecondsSinceEpoch.toString(),
+      'endTime': endTime?.millisecondsSinceEpoch.toString(),
+      'samplingTime': samplingTime?.millisecondsSinceEpoch.toString(),
       'timeUnit': describeEnum(timeUnit),
       'isSampling': _isSampling,
       'fieldValue': fieldValueOptions?.toMap(),
       'platformFieldValues': _fieldValues,
-      'dataCollector': dataCollector.toMap(),
+      'dataCollector': dataCollector?.toMap(),
+      'dataType': dataType?.toMap(),
       'metadataValues': _metaDataValues,
-      //"fieldValueList": _fieldValueList,
       'pairs': pairs,
       'metadata': metadata,
     }..removeWhere((String k, dynamic v) => v == null);
@@ -181,12 +185,12 @@ class SamplePoint {
         other._insertionTime == _insertionTime &&
         mapEquals(other._fieldValues, _fieldValues) &&
         other._dataTypeId == _dataTypeId &&
-        other._dataType == _dataType;
+        other.dataType == dataType;
   }
 
   @override
   int get hashCode {
-    return hashValues(
+    return Object.hash(
       id,
       startTime,
       endTime,
@@ -196,9 +200,9 @@ class SamplePoint {
       dataCollector,
       _isSampling,
       _insertionTime,
-      hashList(_fieldValues?.values),
+      Object.hashAll(_fieldValues?.values.toList() ?? <dynamic>[]),
       _dataTypeId,
-      _dataType,
+      dataType,
     );
   }
 }
@@ -227,7 +231,7 @@ abstract class FieldValueOptions {
 
   @override
   int get hashCode {
-    return hashValues(
+    return Object.hash(
       field,
       value,
     );
@@ -341,9 +345,9 @@ class FieldMap implements FieldValueOptions {
 
   @override
   int get hashCode {
-    return hashValues(
+    return Object.hash(
       field,
-      hashList(value.values),
+      Object.hashAll(value.values),
     );
   }
 }

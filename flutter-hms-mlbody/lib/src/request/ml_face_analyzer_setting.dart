@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
+
+part of '../../huawei_ml_body.dart';
 
 class MLFaceAnalyzerSetting {
   /// Detects all facial features and expressions.
@@ -86,30 +88,31 @@ class MLFaceAnalyzerSetting {
   bool? tracingAllowed;
   int? tracingMode;
 
-  MLFaceAnalyzerSetting(
-      {required this.path,
-      this.featureType,
-      this.keyPointType,
-      this.maxSizeFaceOnly,
-      this.minFaceProportion,
-      this.performanceType,
-      this.poseDisabled,
-      this.shapeType,
-      this.tracingAllowed,
-      this.tracingMode});
+  MLFaceAnalyzerSetting({
+    required this.path,
+    this.featureType,
+    this.keyPointType,
+    this.maxSizeFaceOnly,
+    this.minFaceProportion,
+    this.performanceType,
+    this.poseDisabled,
+    this.shapeType,
+    this.tracingAllowed,
+    this.tracingMode,
+  });
 
   Map<String, dynamic> toMap() {
-    return {
-      "path": path,
-      "featureType": featureType ?? typeFeatures,
-      "keyPointType": keyPointType ?? typeKeyPoints,
-      "maxSizeFaceOnly": maxSizeFaceOnly ?? true,
-      "minFaceProportion": minFaceProportion ?? 0.5,
-      "performanceType": performanceType ?? typePrecision,
-      "poseDisabled": poseDisabled ?? false,
-      "shapeType": shapeType ?? typeShapes,
-      "tracingAllowed": tracingAllowed ?? false,
-      "tracingMode": tracingMode ?? modeTracingRobust
+    return <String, dynamic>{
+      'path': path,
+      'featureType': featureType ?? typeFeatures,
+      'keyPointType': keyPointType ?? typeKeyPoints,
+      'maxSizeFaceOnly': maxSizeFaceOnly ?? true,
+      'minFaceProportion': minFaceProportion ?? 0.5,
+      'performanceType': performanceType ?? typePrecision,
+      'poseDisabled': poseDisabled ?? false,
+      'shapeType': shapeType ?? typeShapes,
+      'tracingAllowed': tracingAllowed ?? false,
+      'tracingMode': tracingMode ?? modeTracingRobust,
     };
   }
 }

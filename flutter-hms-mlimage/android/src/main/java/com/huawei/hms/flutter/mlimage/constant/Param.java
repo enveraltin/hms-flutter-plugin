@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -17,11 +17,6 @@
 package com.huawei.hms.flutter.mlimage.constant;
 
 public interface Param {
-    // Permission params
-    String LIST = "list";
-    String CAMERA = "camera";
-    String STORAGE = "storage";
-
     // Classification params
     String CLASSIFICATION_IDENTITY = "classificationIdentity";
     String NAME = "name";

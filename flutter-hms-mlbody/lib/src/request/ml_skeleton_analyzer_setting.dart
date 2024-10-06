@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
     limitations under the License.
 */
 
+part of '../../huawei_ml_body.dart';
+
 class MLSkeletonAnalyzerSetting {
   /// Detection mode 0: Detect skeleton points for normal postures.
   static const int typeNormal = 0;
@@ -24,9 +26,15 @@ class MLSkeletonAnalyzerSetting {
   String path;
   int? analyzerType;
 
-  MLSkeletonAnalyzerSetting({required this.path, this.analyzerType});
+  MLSkeletonAnalyzerSetting({
+    required this.path,
+    this.analyzerType,
+  });
 
   Map<String, dynamic> toMap() {
-    return {"path": path, "analyzerType": analyzerType ?? typeNormal};
+    return <String, dynamic>{
+      'path': path,
+      'analyzerType': analyzerType ?? typeNormal,
+    };
   }
 }

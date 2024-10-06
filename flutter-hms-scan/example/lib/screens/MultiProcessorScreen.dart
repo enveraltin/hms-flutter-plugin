@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2021. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -16,29 +16,31 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:typed_data';
 
-import 'package:huawei_scan/HmsScanLibrary.dart';
+import 'package:huawei_scan/huawei_scan.dart';
 
 import 'package:huawei_scan_example/widgets/CustomButton.dart';
 import 'package:huawei_scan_example/widgets/ResponseWidget.dart';
 
 class MultiProcessorScreen extends StatefulWidget {
+  const MultiProcessorScreen({Key? key}) : super(key: key);
+
   @override
-  _MultiProcessorScreenState createState() => _MultiProcessorScreenState();
+  State<MultiProcessorScreen> createState() => _MultiProcessorScreenState();
 }
 
 class _MultiProcessorScreenState extends State<MultiProcessorScreen> {
   ScanResponseList? scanList;
 
-  decodeMultiSync() async {
+  void decodeMultiSync() async {
     Uint8List data = (await rootBundle.load('assets/multipleBarcode2.png'))
         .buffer
         .asUint8List();
 
     try {
       ScanResponseList response = await HmsMultiProcessor.decodeMultiSync(
-          DecodeRequest(data: data, scanType: HmsScanTypes.AllScanType));
+        DecodeRequest(data: data, scanType: HmsScanTypes.AllScanType),
+      );
 
       setState(() {
         scanList = response;
@@ -50,14 +52,15 @@ class _MultiProcessorScreenState extends State<MultiProcessorScreen> {
     }
   }
 
-  decodeMultiAsync() async {
+  void decodeMultiAsync() async {
     Uint8List data = (await rootBundle.load('assets/multipleBarcode2.png'))
         .buffer
         .asUint8List();
 
     try {
       ScanResponseList response = await HmsMultiProcessor.decodeMultiAsync(
-          DecodeRequest(data: data, scanType: HmsScanTypes.AllScanType));
+        DecodeRequest(data: data, scanType: HmsScanTypes.AllScanType),
+      );
       setState(() {
         scanList = response;
       });
@@ -78,25 +81,25 @@ class _MultiProcessorScreenState extends State<MultiProcessorScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
-          children: [
+          children: <Widget>[
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
+              children: <Widget>[
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  child: Image.asset("assets/multipleBarcode2.png"),
+                  child: Image.asset('assets/multipleBarcode2.png'),
                 )
               ],
             ),
             CustomButton(
-              text: "Multi Processor Sync Mode",
+              text: 'Multi Processor Sync Mode',
               onPressed: () {
                 decodeMultiSync();
               },
             ),
             CustomButton(
-              text: "Multi Processor Async Mode",
+              text: 'Multi Processor Async Mode',
               onPressed: () {
                 decodeMultiAsync();
               },
@@ -104,7 +107,7 @@ class _MultiProcessorScreenState extends State<MultiProcessorScreen> {
             scanList != null && scanList!.scanResponseList != null
                 ? ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: scanList!.scanResponseList!.length,
                     itemBuilder: (BuildContext ctxt, int index) {
                       return ResponseWidget(
@@ -116,8 +119,9 @@ class _MultiProcessorScreenState extends State<MultiProcessorScreen> {
                         resultType:
                             scanList?.scanResponseList?[index]?.scanTypeForm,
                       );
-                    })
-                : SizedBox.shrink(),
+                    },
+                  )
+                : const SizedBox.shrink(),
           ],
         ),
       ),

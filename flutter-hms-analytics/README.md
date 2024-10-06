@@ -45,7 +45,7 @@ Please see [pub.dev](https://pub.dev/packages/huawei_analytics/install) and [App
 
 ### Additional Topics
 
-- [Enabling HUAWEI Analytics Service](https://developer.huawei.com/consumer/en/doc/development/HMS-Plugin-Guides/config-agc-0000001050171095#EN-US_TOPIC_0000001050171095__section118755594146?ha_source=hms1)
+- [Enabling Huawei Analytics Service](https://developer.huawei.com/consumer/en/doc/development/HMS-Plugin-Guides/config-agc-0000001050171095#EN-US_TOPIC_0000001050171095__section118755594146?ha_source=hms1)
 - Setup
   - [Android Setup](https://developer.huawei.com/consumer/en/doc/development/HMS-Plugin-Guides/android-setup-0000001058644236?ha_source=hms1)
   - [iOS Setup](https://developer.huawei.com/consumer/en/doc/development/HMS-Plugin-Guides/ios-setup-0000001058804234?ha_source=hms1)
@@ -61,7 +61,7 @@ If you have questions about how to use HMS samples, try the following options:
 
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/huawei-mobile-services) is the best place for any programming questions. Be sure to tag your question with **huawei-mobile-services**.
 - [Github](https://github.com/HMS-Core/hms-flutter-plugin) is the official repository for these plugins, You can open an issue or submit your ideas.
-- [Huawei Developer Forum](https://forums.developer.huawei.com/forumPortal/en/home?fid=0101187876626530001) HMS Core Module is great for general questions, or seeking recommendations and opinions.
+- [Huawei Developer Forum](https://forums.developer.huawei.com/forumPortal/en/home?fid=0101187876626530001&ha_source=hms1) HMS Core Module is great for general questions, or seeking recommendations and opinions.
 - [Huawei Developer Docs](https://developer.huawei.com/consumer/en/doc/overview/HMS-Core-Plugin?ha_source=hms1) is place to official documentation for all HMS Core Kits, you can find detailed documentations in there.
 
 If you run into a bug in our samples, please submit an issue to the Github Repository.

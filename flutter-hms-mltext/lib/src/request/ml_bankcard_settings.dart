@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
+
+part of '../../huawei_ml_text.dart';
 
 class MlBankcardSettings {
   /// Failed to initialize the camera.
@@ -49,41 +51,48 @@ class MlBankcardSettings {
   int? resultType;
   int? rectMode;
 
-  factory MlBankcardSettings.capture(
-      {int? orientation, int? resultType, int? rectMode}) {
+  MlBankcardSettings._({
+    required this.path,
+    this.orientation,
+    this.rectMode,
+    this.resultType,
+    this.langType,
+  });
+
+  factory MlBankcardSettings.capture({
+    int? orientation,
+    int? resultType,
+    int? rectMode,
+  }) {
     return MlBankcardSettings._(
-        path: "",
-        orientation: orientation,
-        rectMode: rectMode,
-        resultType: resultType);
+      path: '',
+      orientation: orientation,
+      rectMode: rectMode,
+      resultType: resultType,
+    );
   }
 
-  factory MlBankcardSettings.image(
-      {required String path,
-      String? langType,
-      int? resultType,
-      int? rectMode}) {
+  factory MlBankcardSettings.image({
+    required String path,
+    String? langType,
+    int? resultType,
+    int? rectMode,
+  }) {
     return MlBankcardSettings._(
-        path: path,
-        langType: langType,
-        resultType: resultType,
-        rectMode: rectMode);
+      path: path,
+      langType: langType,
+      resultType: resultType,
+      rectMode: rectMode,
+    );
   }
-
-  MlBankcardSettings._(
-      {required this.path,
-      this.orientation,
-      this.rectMode,
-      this.resultType,
-      this.langType});
 
   Map<String, dynamic> toMap() {
-    return {
-      "path": path,
-      "langType": langType ?? "zh",
-      "orientation": orientation ?? orientationAuto,
-      "resultType": resultType ?? resultAll,
-      "rectMode": rectMode ?? strictMode
+    return <String, dynamic>{
+      'path': path,
+      'langType': langType ?? 'zh',
+      'orientation': orientation ?? orientationAuto,
+      'resultType': resultType ?? resultAll,
+      'rectMode': rectMode ?? strictMode,
     };
   }
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -21,8 +21,12 @@ class Field {
   /// Field that contains integer values.
   static const int FORMAT_INT32 = 1;
 
+  @Deprecated('This constant has been deprecated.')
   /// Field that contains float values.
   static const int FORMAT_FLOAT = 2;
+
+  /// Field that contains Double values.
+  static const int FORMAT_DOUBLE = 2;
 
   /// Field that contains string values.
   static const int FORMAT_STRING = 3;
@@ -117,27 +121,27 @@ class Field {
     'vdot',
   );
 
-  static const Field TRAINING_INDEX = Field.newFloatField(
+  static const Field TRAINING_INDEX = Field.newDoubleField(
     'index',
   );
 
-  static const Field FATIGUE_INDEX = Field.newFloatField(
+  static const Field FATIGUE_INDEX = Field.newDoubleField(
     'index',
   );
 
-  static const Field PHYSICAL_FITNESS_INDEX = Field.newFloatField(
+  static const Field PHYSICAL_FITNESS_INDEX = Field.newDoubleField(
     'index',
   );
 
-  static const Field STATE_INDEX = Field.newFloatField(
+  static const Field STATE_INDEX = Field.newDoubleField(
     'index',
   );
 
-  static const Field FIELD_LAST = Field.newFloatField(
+  static const Field FIELD_LAST = Field.newDoubleField(
     'last',
   );
 
-  static const Field FIELD_JUMP_HEIGHT = Field.newFloatField(
+  static const Field FIELD_JUMP_HEIGHT = Field.newDoubleField(
     'jump_height',
   );
 
@@ -149,15 +153,15 @@ class Field {
     'jump_times',
   );
 
-  static const Field FIELD_MIN_JUMP_HEIGHT = Field.newFloatField(
+  static const Field FIELD_MIN_JUMP_HEIGHT = Field.newDoubleField(
     'min_jump_height',
   );
 
-  static const Field FIELD_AVG_JUMP_HEIGHT = Field.newFloatField(
+  static const Field FIELD_AVG_JUMP_HEIGHT = Field.newDoubleField(
     'avg_jump_height',
   );
 
-  static const Field FIELD_MAX_JUMP_HEIGHT = Field.newFloatField(
+  static const Field FIELD_MAX_JUMP_HEIGHT = Field.newDoubleField(
     'max_jump_height',
   );
 
@@ -173,7 +177,7 @@ class Field {
     'max_passage_duration',
   );
 
-  static const Field ALTITUDE = Field.newFloatField(
+  static const Field ALTITUDE = Field.newDoubleField(
     'altitude',
   );
 
@@ -208,7 +212,7 @@ class Field {
   static const Field HANG_TIME = Field.newIntField(
     'hang_time',
   );
-  static const Field GROUND_HANG_TIME_RATE = Field.newFloatField(
+  static const Field GROUND_HANG_TIME_RATE = Field.newDoubleField(
     'ground_hang_time_rate',
   );
   static const Field FORE_FOOT_STRIKE_PATTERN = Field.newIntField(
@@ -236,15 +240,15 @@ class Field {
   static const Field AVG_HANG_TIME = Field.newIntField(
     'avg_hang_time',
   );
-  static const Field AVG_GROUND_HANG_TIME_RATE = Field.newFloatField(
+  static const Field AVG_GROUND_HANG_TIME_RATE = Field.newDoubleField(
     'avg_ground_hang_time_rate',
   );
 
-  static const Field ASCENT_RATE = Field.newFloatField(
+  static const Field ASCENT_RATE = Field.newDoubleField(
     'ascentRate',
   );
 
-  static const Field DESCENT_RATE = Field.newFloatField(
+  static const Field DESCENT_RATE = Field.newDoubleField(
     'descentRate',
   );
 
@@ -283,28 +287,28 @@ class Field {
     'sport_intensity_score',
   );
 
-  static const Field DIVING_DURATION = Field.newFloatField(
+  static const Field DIVING_DURATION = Field.newDoubleField(
     'divingDuration',
   );
-  static const Field FLYING_AFTER_DIVING_TIME = Field.newFloatField(
+  static const Field FLYING_AFTER_DIVING_TIME = Field.newDoubleField(
     'flyingAfterDivingTime',
   );
-  static const Field SURFACE_INTERVAL_TIME = Field.newFloatField(
+  static const Field SURFACE_INTERVAL_TIME = Field.newDoubleField(
     'surfaceIntervalTime',
   );
-  static const Field WATER_SURFACE_TEMPERATURE = Field.newFloatField(
+  static const Field WATER_SURFACE_TEMPERATURE = Field.newDoubleField(
     'waterSurfaceTemperature',
   );
-  static const Field UNDERWATER_TEMPERATURE = Field.newFloatField(
+  static const Field UNDERWATER_TEMPERATURE = Field.newDoubleField(
     'underwaterTemperature',
   );
-  static const Field DIVE_DEPTH = Field.newFloatField(
+  static const Field DIVE_DEPTH = Field.newDoubleField(
     'diveDepth',
   );
-  static const Field ENTERING_WATER_LATITUDE = Field.newFloatField(
+  static const Field ENTERING_WATER_LATITUDE = Field.newDoubleField(
     'enteringWaterLatitude',
   );
-  static const Field ENTERING_WATER_LONGITUDE = Field.newFloatField(
+  static const Field ENTERING_WATER_LONGITUDE = Field.newDoubleField(
     'enteringWaterLongitude',
   );
 
@@ -312,10 +316,10 @@ class Field {
     'coordinate',
   );
 
-  static const Field EXITING_WATER_LATITUDE = Field.newFloatField(
+  static const Field EXITING_WATER_LATITUDE = Field.newDoubleField(
     'exitingWaterLatitude',
   );
-  static const Field EXITING_WATER_LONGITUDE = Field.newFloatField(
+  static const Field EXITING_WATER_LONGITUDE = Field.newDoubleField(
     'exitingWaterLongitude',
   );
 
@@ -323,21 +327,21 @@ class Field {
     'duration',
   );
 
-  static const Field FIELD_ASCENT_TOTAL = Field.newFloatField(
+  static const Field FIELD_ASCENT_TOTAL = Field.newDoubleField(
     'ascent_total',
   );
 
-  static const Field FIELD_DESCENT_TOTAL = Field.newFloatField(
+  static const Field FIELD_DESCENT_TOTAL = Field.newDoubleField(
     'descent_total',
   );
 
   /// Precision.
-  static const Field FIELD_PRECISION = Field.newFloatField(
+  static const Field FIELD_PRECISION = Field.newDoubleField(
     'precision',
   );
 
   /// Altitude.
-  static const Field FIELD_ALTITUDE = Field.newFloatField(
+  static const Field FIELD_ALTITUDE = Field.newDoubleField(
     'altitude',
   );
 
@@ -347,17 +351,17 @@ class Field {
   );
 
   /// Activity type confidence.
-  static const Field FIELD_POSSIBILITY_OF_ACTIVITY = Field.newFloatField(
+  static const Field FIELD_POSSIBILITY_OF_ACTIVITY = Field.newDoubleField(
     'possibility_of_activity',
   );
 
   /// Heart rate.
-  static const Field FIELD_BPM = Field.newFloatField(
+  static const Field FIELD_BPM = Field.newDoubleField(
     'bpm',
   );
 
   /// Confidence, with a value ranging from `0.0` to `100.0`.
-  static const Field FIELD_POSSIBILITY = Field.newFloatField(
+  static const Field FIELD_POSSIBILITY = Field.newDoubleField(
     'possibility',
   );
 
@@ -367,17 +371,17 @@ class Field {
   );
 
   /// Distance (m).
-  static const Field FIELD_DISTANCE = Field.newFloatField(
+  static const Field FIELD_DISTANCE = Field.newDoubleField(
     'distance',
   );
 
   /// Distance covered since the last reading.
-  static const Field FIELD_DISTANCE_DELTA = Field.newFloatField(
+  static const Field FIELD_DISTANCE_DELTA = Field.newDoubleField(
     'distance_delta',
   );
 
   /// Height (m).
-  static const Field FIELD_HEIGHT = Field.newFloatField(
+  static const Field FIELD_HEIGHT = Field.newDoubleField(
     'height',
   );
 
@@ -392,73 +396,73 @@ class Field {
   );
 
   /// Step length (m)
-  static const Field FIELD_STEP_LENGTH = Field.newFloatField(
+  static const Field FIELD_STEP_LENGTH = Field.newDoubleField(
     'step_length',
   );
 
   /// Latitude (degree).
-  static const Field FIELD_LATITUDE = Field.newFloatField(
+  static const Field FIELD_LATITUDE = Field.newDoubleField(
     'latitude',
   );
 
   /// Longitude (degree).
-  static const Field FIELD_LONGITUDE = Field.newFloatField(
+  static const Field FIELD_LONGITUDE = Field.newDoubleField(
     'longitude',
   );
 
   /// Weight (kg).
-  static const Field FIELD_BODY_WEIGHT = Field.newFloatField(
+  static const Field FIELD_BODY_WEIGHT = Field.newDoubleField(
     'body_weight',
   );
 
   /// Body mass index, which is calculated via dividing the weight kilograms by
   /// the square meter of height (kg/m2).
-  static const Field FIELD_BMI = Field.newFloatField(
+  static const Field FIELD_BMI = Field.newDoubleField(
     'bmi',
   );
 
   /// Body fat (kg), accurate to the first decimal place.
-  static const Field FIELD_BODY_FAT = Field.newFloatField(
+  static const Field FIELD_BODY_FAT = Field.newDoubleField(
     'body_fat',
   );
 
   /// Body fat rate (percentage), with a value ranging from 0 to 100.
-  static const Field FIELD_BODY_FAT_RATE = Field.newFloatField(
+  static const Field FIELD_BODY_FAT_RATE = Field.newDoubleField(
     'body_fat_rate',
   );
 
   /// Muscle mass (kg).
-  static const Field FIELD_MUSCLE_MASS = Field.newFloatField(
+  static const Field FIELD_MUSCLE_MASS = Field.newDoubleField(
     'muscle_mass',
   );
 
   /// Basic metabolism (kcal/day).
-  static const Field FIELD_BASAL_METABOLISM = Field.newFloatField(
+  static const Field FIELD_BASAL_METABOLISM = Field.newDoubleField(
     'basal_metabolism',
   );
 
   /// Water weight (kg).
-  static const Field FIELD_MOISTURE = Field.newFloatField(
+  static const Field FIELD_MOISTURE = Field.newDoubleField(
     'moisture',
   );
 
   /// Water rate (percentage).
-  static const Field FIELD_MOISTURE_RATE = Field.newFloatField(
+  static const Field FIELD_MOISTURE_RATE = Field.newDoubleField(
     'moisture_rate',
   );
 
   /// Visceral fat (level).
-  static const Field FIELD_VISCERAL_FAT_LEVEL = Field.newFloatField(
+  static const Field FIELD_VISCERAL_FAT_LEVEL = Field.newDoubleField(
     'visceral_fat_level',
   );
 
   /// Bone salt amount (kg).
-  static const Field FIELD_BONE_SALT = Field.newFloatField(
+  static const Field FIELD_BONE_SALT = Field.newDoubleField(
     'bone_salt',
   );
 
   /// Protein ratio (percentage).
-  static const Field FIELD_PROTEIN_RATE = Field.newFloatField(
+  static const Field FIELD_PROTEIN_RATE = Field.newDoubleField(
     'protein_rate',
   );
 
@@ -468,37 +472,37 @@ class Field {
   );
 
   /// Body score (score).
-  static const Field FIELD_BODY_SCORE = Field.newFloatField(
+  static const Field FIELD_BODY_SCORE = Field.newDoubleField(
     'body_score',
   );
 
   /// Skeletal muscle (kg).
-  static const Field FIELD_SKELETAL_MUSCLE_MASS = Field.newFloatField(
+  static const Field FIELD_SKELETAL_MUSCLE_MASS = Field.newDoubleField(
     'skeletal_musclel_mass',
   );
 
   /// Impedance (ohm).
-  static const Field FIELD_IMPEDANCE = Field.newFloatField(
+  static const Field FIELD_IMPEDANCE = Field.newDoubleField(
     'impedance',
   );
 
   /// Circumference of a body part (such as the hip, chest, and waist) in centimeters.
-  static const Field FIELD_CIRCUMFERENCE = Field.newFloatField(
+  static const Field FIELD_CIRCUMFERENCE = Field.newDoubleField(
     'circumference',
   );
 
   /// Speed (m/s).
-  static const Field FIELD_SPEED = Field.newFloatField(
+  static const Field FIELD_SPEED = Field.newDoubleField(
     'speed',
   );
 
   /// Rotations per minute or rate per minute.
-  static const Field FIELD_RPM = Field.newFloatField(
+  static const Field FIELD_RPM = Field.newDoubleField(
     'rpm',
   );
 
   /// Step frequency.
-  static const Field FIELD_STEP_RATE = Field.newFloatField(
+  static const Field FIELD_STEP_RATE = Field.newDoubleField(
     'step_rate',
   );
 
@@ -508,22 +512,22 @@ class Field {
   );
 
   /// Calories (kcal).
-  static const Field FIELD_CALORIES = Field.newFloatField(
+  static const Field FIELD_CALORIES = Field.newDoubleField(
     'calories',
   );
 
   /// Calories (kcal).
-  static const Field FIELD_CALORIES_TOTAL = Field.newFloatField(
+  static const Field FIELD_CALORIES_TOTAL = Field.newDoubleField(
     'calories_total',
   );
 
   /// Power (Watt).
-  static const Field FIELD_POWER = Field.newFloatField(
+  static const Field FIELD_POWER = Field.newDoubleField(
     'power',
   );
 
   /// Volume (liter).
-  static const Field FIELD_HYDRATE = Field.newFloatField(
+  static const Field FIELD_HYDRATE = Field.newDoubleField(
     'hydrate',
   );
 
@@ -553,37 +557,37 @@ class Field {
   );
 
   /// Average value.
-  static const Field FIELD_AVG = Field.newFloatField(
+  static const Field FIELD_AVG = Field.newDoubleField(
     'avg',
   );
 
   /// Maximum value.
-  static const Field FIELD_MAX = Field.newFloatField(
+  static const Field FIELD_MAX = Field.newDoubleField(
     'max',
   );
 
   /// Minimum value.
-  static const Field FIELD_MIN = Field.newFloatField(
+  static const Field FIELD_MIN = Field.newDoubleField(
     'min',
   );
 
   /// Low latitude (degree).
-  static const Field FIELD_MIN_LATITUDE = Field.newFloatField(
+  static const Field FIELD_MIN_LATITUDE = Field.newDoubleField(
     'min_latitude',
   );
 
   /// Low longitude (degree).
-  static const Field FIELD_MIN_LONGITUDE = Field.newFloatField(
+  static const Field FIELD_MIN_LONGITUDE = Field.newDoubleField(
     'min_longitude',
   );
 
   /// High latitude (degree).
-  static const Field FIELD_MAX_LATITUDE = Field.newFloatField(
+  static const Field FIELD_MAX_LATITUDE = Field.newDoubleField(
     'max_latitude',
   );
 
   /// High longitude (degree).
-  static const Field FIELD_MAX_LONGITUDE = Field.newFloatField(
+  static const Field FIELD_MAX_LONGITUDE = Field.newDoubleField(
     'max_longitude',
   );
 
@@ -593,7 +597,7 @@ class Field {
   );
 
   /// Workout intensity.
-  static const Field FIELD_INTENSITY = Field.newFloatField(
+  static const Field FIELD_INTENSITY = Field.newDoubleField(
     'intensity',
   );
 
@@ -711,6 +715,336 @@ class Field {
     'measure_count',
   );
 
+  /// Maximum resistance level supported by the device.
+  static const Field MAX_RES = Field.newIntField(
+    'maxRes',
+  );
+
+  /// Minimum resistance level supported by the device.
+  static const Field MIN_RES = Field.newIntField(
+    'minRes',
+  );
+
+  /// Resistance level.
+  static const Field RESISTANCE_LEVEL = Field.newIntField(
+    'resistanceLevel',
+  );
+
+  /// Lower limit of resistance level 1.
+  static const Field RESISTANCE_LEVEL_ONE_LOWER_LIMIT = Field.newIntField(
+    'resistanceLevelOneLowerLimit',
+  );
+
+  /// Lower limit of resistance level 2.
+  static const Field RESISTANCE_LEVEL_TWO_LOWER_LIMIT = Field.newIntField(
+    'resistanceLevelTwoLowerLimit',
+  );
+
+  /// Lower limit of resistance level 3.
+  static const Field RESISTANCE_LEVEL_THREE_LOWER_LIMIT = Field.newIntField(
+    'resistanceLevelThreeLowerLimit',
+  );
+
+  /// Lower limit of resistance level 3.
+  static const Field RESISTANCE_LEVEL_FOUR_LOWER_LIMIT = Field.newIntField(
+    'resistanceLevelFourLowerLimit',
+  );
+
+  /// Lower limit of resistance level 5.
+  static const Field RESISTANCE_LEVEL_FIVE_LOWER_LIMIT = Field.newIntField(
+    'resistanceLevelFiveLowerLimit',
+  );
+
+  /// Upper limit of resistance level 5.
+  static const Field RESISTANCE_LEVEL_FIVE_UPPER_LIMIT = Field.newIntField(
+    'resistanceLevelFiveUpperLimit',
+  );
+
+  /// Activity duration at resistance level 1.
+  static const Field RESISTANCE_LEVEL_ONE_TIME = Field.newIntField(
+    'resistanceLevelOneTime',
+  );
+
+  /// Activity duration at resistance level 2.
+  static const Field RESISTANCE_LEVEL_TWO_TIME = Field.newIntField(
+    'resistanceLevelTwoTime',
+  );
+
+  /// Activity duration at resistance level 3.
+  static const Field RESISTANCE_LEVEL_THREE_TIME = Field.newIntField(
+    'resistanceLevelThreeTime',
+  );
+
+  /// Activity duration at resistance level 4.
+  static const Field RESISTANCE_LEVEL_FOUR_TIME = Field.newIntField(
+    'resistanceLevelFourTime',
+  );
+
+  /// Activity duration at resistance level 5.
+  static const Field RESISTANCE_LEVEL_FIVE_TIME = Field.newIntField(
+    'resistanceLevelFiveTime',
+  );
+
+  /// Rowing stroke rate.
+  static const Field SPM = Field.newDoubleField(
+    'spm',
+  );
+
+  /// SWOLF.
+  static const Field SWOLF = Field.newDoubleField(
+    'swolf',
+  );
+
+  /// Sleep type.
+  static const Field SLEEP_TYPE = Field.newIntField(
+    'sleep_type',
+  );
+
+  /// Time when the user prepares for sleep.
+  static const Field PREPARE_SLEEP_TIME = Field.newLongField(
+    'prepare_sleep_time',
+  );
+
+  /// Time when the user is out of bed for the last time.
+  static const Field OFF_BED_TIME = Field.newLongField(
+    'off_bed_time',
+  );
+
+  /// Maximum oxygen uptake.
+  static const Field VO2MAX = Field.newIntField(
+    'vo2max',
+  );
+
+  /// Latest value.
+  static const Field LAST = Field.newIntField(
+    'last',
+  );
+
+  /// Breathing duration.
+  static const Field BREATH_TIME = Field.newIntField(
+    'breathTime',
+  );
+
+  /// Breath holding time.
+  static const Field BREATH_HOLDING_TIME = Field.newIntField(
+    'breathHoldingTime',
+  );
+
+  /// Number of training sessions.
+  static const Field BREATH_HOLDING_TRAIN_RHYTHM = Field.newIntField(
+    'breathHoldingTrainRhythm',
+  );
+
+  /// Diaphragm contraction.
+  static const Field DIAPHRAGM_TIME = Field.newIntField(
+    'diaphragmTime',
+  );
+
+  /// Active peak.
+  static const Field IMPACT_PEAK = Field.newDoubleField(
+    'impact_peak',
+  );
+
+  /// Vertical amplitude.
+  static const Field VERTICAL_OSCILLATION = Field.newDoubleField(
+    'vertical_oscillation',
+  );
+
+  /// Vertical stride ratio.
+  static const Field VERTICAL_RATIO = Field.newDoubleField(
+    'vertical_ratio',
+  );
+
+  /// Left and right ground contact balance.
+  static const Field GC_TIME_BALANCE = Field.newDoubleField(
+    'gc_time_balance',
+  );
+
+  /// Average active peak.
+  static const Field AVG_IMPACT_PEAK = Field.newDoubleField(
+    'avg_impact_peak',
+  );
+
+  /// Average left and right ground contact balance.
+  static const Field AVG_GC_TIME_BALANCE = Field.newDoubleField(
+    'avg_gc_time_balance',
+  );
+
+  /// Average vertical oscillation.
+  static const Field AVG_VERTICAL_OSCILLATION = Field.newDoubleField(
+    'avg_vertical_oscillation',
+  );
+
+  /// Average vertical stride ratio.
+  static const Field AVG_VERTICAL_RATIO = Field.newDoubleField(
+    'avg_vertical_ratio',
+  );
+
+  /// Average impact loading rate.
+  static const Field AVG_VERTICAL_IMPACT_RATE = Field.newDoubleField(
+    'avg_vertical_impact_rate',
+  );
+
+  /// Underwater time.
+  static const Field DIVING_TIME = Field.newIntField(
+    'divingTime',
+  );
+
+  /// Number of dives.
+  static const Field DIVING_COUNT = Field.newIntField(
+    'divingCount',
+  );
+
+  /// Maximum depth of diving.
+  static const Field MAX_DEPTH = Field.newDoubleField(
+    'maxDepth',
+  );
+
+  /// Average depth of diving.
+  static const Field AVG_DEPTH = Field.newDoubleField(
+    'avgDepth',
+  );
+
+  /// Maximum duration of a single dive.
+  static const Field MAX_UNDERWATER_TIME = Field.newIntField(
+    'maxUnderwaterTime',
+  );
+
+  /// No-fly time.
+  static const Field NO_FLY_TIME = Field.newIntField(
+    'noFlyTime',
+  );
+
+  /// Water type.
+  static const Field WATER_TYPE = Field.newIntField(
+    'waterType',
+  );
+
+  /// Surface interval.
+  static const Field SURFACE_TIME = Field.newIntField(
+    'surfaceTime',
+  );
+
+  /// Number of trips.
+  static const Field TRIP_TIMES = Field.newIntField(
+    'trip_times',
+  );
+
+  /// Maximum slope (in percentages).
+  static const Field MAX_SLOPE_PERCENT = Field.newDoubleField(
+    'max_slope_percent',
+  );
+
+  /// Maximum slope angle.
+  static const Field MAX_SLOPE_DEGREE = Field.newDoubleField(
+    'max_slope_degree',
+  );
+
+  /// Ski duration.
+  static const Field SKIING_TOTAL_TIME = Field.newLongField(
+    'total_time',
+  );
+
+  /// Ski distance.
+  static const Field SKIING_TOTAL_DISTANCE = Field.newIntField(
+    'total_distance',
+  );
+
+  /// Average body fat percentage.
+  static const Field FIELD_AVG_BODY_FAT_RATE = Field.newDoubleField(
+    'avg_body_fat_rate',
+  );
+
+  /// Maximum body fat percentage
+  static const Field FIELD_MAX_BODY_FAT_RATE = Field.newDoubleField(
+    'max_body_fat_rate',
+  );
+
+  /// Minimum body fat percentage.
+  static const Field FIELD_MIN_BODY_FAT_RATE = Field.newDoubleField(
+    'min_body_fat_rate',
+  );
+
+  /// Average skeletal muscle mass.
+  static const Field FIELD_AVG_SKELETAL_MUSCLEL_MASS = Field.newDoubleField(
+    'avg_skeletal_musclel_mass',
+  );
+
+  /// Maximum skeletal muscle mass.
+  static const Field FIELD_MAX_SKELETAL_MUSCLEL_MASS = Field.newDoubleField(
+    'max_skeletal_musclel_mass',
+  );
+
+  /// Minimum skeletal muscle mass.
+  static const Field FIELD_MIN_SKELETAL_MUSCLEL_MASS = Field.newDoubleField(
+    'min_skeletal_musclel_mass',
+  );
+
+  /// Stroke count.
+  static const Field PULL_TIMES = Field.newIntField(
+    'pull_times',
+  );
+
+  /// Main stroke.
+  static const Field SWIMMING_STROKE = Field.newIntField(
+    'swimming_stroke',
+  );
+
+  /// Swimming pool length.
+  static const Field POOL_LENGTH = Field.newIntField(
+    'pool_length',
+  );
+
+  /// Total swings.
+  static const Field GOLF_SWING_COUNT = Field.newIntField(
+    'golf_swing_count',
+  );
+
+  /// Average swing speed.
+  static const Field GOLF_SWING_SPEED = Field.newIntField(
+    'golf_swing_speed',
+  );
+
+  /// Maximum swing speed.
+  static const Field GOLF_MAX_SWING_SPEED = Field.newIntField(
+    'golf_max_swing_speed',
+  );
+
+  /// Average swing tempo (average backswing time/average downswing time).
+  static const Field GOLF_SWING_TEMPO = Field.newDoubleField(
+    'golf_swing_tempo',
+  );
+
+  /// Average downswing time.
+  static const Field GOLF_DOWN_SWING_TIME = Field.newIntField(
+    'golf_down_swing_time',
+  );
+
+  /// Average backswing time.
+  static const Field GOLF_BACK_SWING_TIME = Field.newIntField(
+    'golf_back_swing_time',
+  );
+
+  static const Field SLEEP_RESPIRATORY_TYPE = Field.newIntField(
+    'type',
+  );
+
+  static const Field SLEEP_RESPIRATORY_VALUE = Field.newDoubleField(
+    'value',
+  );
+
+  static const Field EVENT_NAME = Field.newIntField(
+    'eventName',
+  );
+
+   static const Field TEMPERATURE = Field.newDoubleField(
+    'temperature',
+  );
+
+   static const Field DEPTH = Field.newDoubleField(
+    'depth',
+  );
+
   /// Attribute type.
   final int format;
 
@@ -726,9 +1060,15 @@ class Field {
     this.isOptional = false,
   });
 
+  @Deprecated('This method has been deprecated.')
   /// Creates an attribute that contains float values.
   const Field.newFloatField(this.name)
       : format = FORMAT_FLOAT,
+        isOptional = false;
+
+  /// Creates an attribute that contains Double values.
+  const Field.newDoubleField(this.name)
+      : format = FORMAT_DOUBLE,
         isOptional = false;
 
   /// Creates an attribute that contains integer values.
@@ -785,7 +1125,7 @@ class Field {
 
   @override
   int get hashCode {
-    return hashValues(
+    return Object.hash(
       name,
       format,
       isOptional,

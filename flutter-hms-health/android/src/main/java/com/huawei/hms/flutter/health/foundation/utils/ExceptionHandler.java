@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,6 @@ import com.huawei.hms.common.ApiException;
 
 import io.flutter.plugin.common.MethodChannel.Result;
 
-/**
- * {@link ExceptionHandler} simply looks for exception then, whether gives an ApiException log information with return
- * code or throws an exception with localized message.
- *
- * @since v.5.0.5
- */
 public enum ExceptionHandler {
     INSTANCE;
 

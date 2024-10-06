@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,14 +14,21 @@
     limitations under the License.
 */
 
+part of huawei_ml_image;
+
 class MLImagePoint {
-  dynamic x;
-  dynamic y;
+  final dynamic x;
+  final dynamic y;
 
-  MLImagePoint({this.x, this.y});
+  const MLImagePoint({
+    this.x,
+    this.y,
+  });
 
-  MLImagePoint.fromJson(Map<dynamic, dynamic> map) {
-    x = map['x'];
-    y = map['y'];
+  factory MLImagePoint.fromJson(Map<dynamic, dynamic> map) {
+    return MLImagePoint(
+      x: map['x'],
+      y: map['y'],
+    );
   }
 }

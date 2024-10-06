@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
+
+part of huawei_ml_image;
 
 class MLImageSegmentationAnalyzerSetting {
   /// Obtains all segmentation results by default.
@@ -36,29 +38,38 @@ class MLImageSegmentationAnalyzerSetting {
   /// Detection mode 2: detection based on the hair model
   static const int HAIR_SEG = 2;
 
-  String path;
-  int? analyzerType;
-  int? scene;
-  bool? exactMode;
+  final String path;
+  final int? analyzerType;
+  final int? scene;
+  final bool? exactMode;
 
-  factory MLImageSegmentationAnalyzerSetting.create(
-      {required String path, int? analyzerType, int? scene, bool? exactMode}) {
+  const MLImageSegmentationAnalyzerSetting._({
+    required this.path,
+    this.analyzerType,
+    this.exactMode,
+    this.scene,
+  });
+
+  factory MLImageSegmentationAnalyzerSetting.create({
+    required String path,
+    int? analyzerType,
+    int? scene,
+    bool? exactMode,
+  }) {
     return MLImageSegmentationAnalyzerSetting._(
-        path: path,
-        analyzerType: analyzerType,
-        scene: scene,
-        exactMode: exactMode);
+      path: path,
+      analyzerType: analyzerType,
+      scene: scene,
+      exactMode: exactMode,
+    );
   }
 
-  MLImageSegmentationAnalyzerSetting._(
-      {required this.path, this.analyzerType, this.exactMode, this.scene});
-
   Map<String, dynamic> toMap() {
-    return {
-      "path": path,
-      "scene": scene ?? ALL,
-      "analyzerType": analyzerType ?? IMAGE_SEG,
-      "exactMode": exactMode ?? true
+    return <String, dynamic>{
+      'path': path,
+      'scene': scene ?? ALL,
+      'analyzerType': analyzerType ?? IMAGE_SEG,
+      'exactMode': exactMode ?? true,
     };
   }
 }

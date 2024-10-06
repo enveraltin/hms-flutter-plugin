@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -22,29 +22,31 @@ class LivenessExample extends StatefulWidget {
   const LivenessExample({Key? key}) : super(key: key);
 
   @override
-  _LivenessExampleState createState() => _LivenessExampleState();
+  State<LivenessExample> createState() => _LivenessExampleState();
 }
 
 class _LivenessExampleState extends State<LivenessExample> {
   late MLLivenessCapture _capture;
-
   Image? image;
   bool? isLive;
   dynamic score;
 
   @override
   void initState() {
-    _capture = MLLivenessCapture();
     super.initState();
+    _capture = MLLivenessCapture();
   }
 
-  _startRecognition() async {
+  void _startRecognition() async {
     try {
-      MLLivenessCaptureResult result = await _capture.startDetect();
+      final MLLivenessCaptureResult result = await _capture.startDetect();
       setState(() {
         isLive = result.isLive;
         score = result.score;
-        image = Image.memory(result.bitmap!, fit: BoxFit.cover);
+        image = Image.memory(
+          result.bitmap!,
+          fit: BoxFit.cover,
+        );
       });
     } on Exception catch (e) {
       exceptionDialog(context, e.toString());
@@ -57,16 +59,16 @@ class _LivenessExampleState extends State<LivenessExample> {
       appBar: demoAppBar('Liveness Detection Demo'),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
+        children: <Widget>[
           Container(
             color: Colors.grey,
             margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.width,
-            child: image ?? Image.asset("assets/user.png"),
+            child: image ?? Image.asset('assets/user.png'),
           ),
-          resultBox("Is live", isLive),
-          resultBox("Score", score),
+          resultBox('Is live', isLive),
+          resultBox('Score', score),
           Container(
             width: double.infinity - 20,
             margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -75,7 +77,7 @@ class _LivenessExampleState extends State<LivenessExample> {
               onPressed: _startRecognition,
               child: const Text('Capture'),
             ),
-          )
+          ),
         ],
       ),
     );

@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,10 +14,7 @@
     limitations under the License.
 */
 
-import 'package:flutter/services.dart';
-import 'package:huawei_ml_image/src/common/xport.dart';
-import 'package:huawei_ml_image/src/request/xport.dart';
-import 'package:huawei_ml_image/src/result/ml_scene_detection.dart';
+part of huawei_ml_image;
 
 class MLSceneDetectionAnalyzer
     implements
@@ -26,27 +23,35 @@ class MLSceneDetectionAnalyzer
   late MethodChannel _methodChannel;
 
   MLSceneDetectionAnalyzer() {
-    _methodChannel = MethodChannel("$baseChannel.scene");
+    _methodChannel = const MethodChannel('$baseChannel.scene');
   }
 
   @override
   Future<List<MLSceneDetection>> analyseFrame(
-      MLSceneDetectionAnalyzerSetting setting) async {
-    List res =
-        await _methodChannel.invokeMethod(mAnalyzeFrame, setting.toMap());
-    return res.map((e) => MLSceneDetection.fromJson(e)).toList();
+    MLSceneDetectionAnalyzerSetting setting,
+  ) async {
+    final List<dynamic> res = await _methodChannel.invokeMethod(
+      mAnalyzeFrame,
+      setting.toMap(),
+    );
+    return res.map((dynamic e) => MLSceneDetection.fromJson(e)).toList();
   }
 
   @override
   Future<List<MLSceneDetection>> asyncAnalyseFrame(
-      MLSceneDetectionAnalyzerSetting setting) async {
-    List res =
-        await _methodChannel.invokeMethod(mAsyncAnalyzeFrame, setting.toMap());
-    return res.map((e) => MLSceneDetection.fromJson(e)).toList();
+    MLSceneDetectionAnalyzerSetting setting,
+  ) async {
+    final List<dynamic> res = await _methodChannel.invokeMethod(
+      mAsyncAnalyzeFrame,
+      setting.toMap(),
+    );
+    return res.map((dynamic e) => MLSceneDetection.fromJson(e)).toList();
   }
 
   @override
   Future<bool> stop() async {
-    return await _methodChannel.invokeMethod(mStop);
+    return await _methodChannel.invokeMethod(
+      mStop,
+    );
   }
 }

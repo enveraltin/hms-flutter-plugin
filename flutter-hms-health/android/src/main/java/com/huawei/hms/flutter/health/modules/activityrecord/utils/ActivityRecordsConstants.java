@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ public final class ActivityRecordsConstants {
     public enum ActivityRecordMethods {
         ADD_ACTIVITY_RECORD("addActivityRecord"),
         BEGIN_ACTIVITY_RECORD("beginActivityRecord"),
+        CONTINUE_ACTIVITY_RECORD("continueActivityRecord"),
         END_ACTIVITY_RECORD("endActivityRecord"),
         GET_ACTIVITY_RECORD("getActivityRecord"),
         END_ALL_ACTIVITY_RECORDS("endAllActivityRecords"),

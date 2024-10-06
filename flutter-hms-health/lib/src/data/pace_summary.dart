@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -92,11 +92,11 @@ class PaceSummary {
 
   @override
   int get hashCode {
-    return hashValues(
-      hashList(britishPaceMap?.values),
-      hashList(britishPartTimeMap?.values),
-      hashList(paceMap?.values),
-      hashList(partTimeMap?.values),
+    return Object.hash(
+      Object.hashAll(britishPaceMap?.values.toList() ?? <dynamic>[]),
+      Object.hashAll(britishPartTimeMap?.values.toList() ?? <dynamic>[]),
+      Object.hashAll(paceMap?.values.toList() ?? <dynamic>[]),
+      Object.hashAll(partTimeMap?.values.toList() ?? <dynamic>[]),
       avgPace,
       bestPace,
     );

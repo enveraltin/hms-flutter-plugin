@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,35 +14,40 @@
     limitations under the License.
 */
 
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
-import 'package:huawei_ml_image/src/common/constants.dart';
-import 'package:huawei_ml_image/src/common/method.dart';
-import 'package:huawei_ml_image/src/request/xport.dart';
-import 'package:huawei_ml_image/src/result/xport.dart';
+part of huawei_ml_image;
 
 class MLProductVisionSearchAnalyzer {
   late MethodChannel _channel;
 
   MLProductVisionSearchAnalyzer() {
-    _channel = MethodChannel("$baseChannel.product");
+    _channel = const MethodChannel('$baseChannel.product');
   }
 
   Future<List<MlProductVisualSearch?>> searchProduct(
-      MLProductVisionSearchAnalyzerSetting setting) async {
-    List res = await _channel.invokeMethod(mAnalyzeProduct, setting.toMap());
-    return res.map((e) => MlProductVisualSearch.fromMap(e)).toList();
+    MLProductVisionSearchAnalyzerSetting setting,
+  ) async {
+    final List<dynamic> res = await _channel.invokeMethod(
+      mAnalyzeProduct,
+      setting.toMap(),
+    );
+    return res.map((dynamic e) => MlProductVisualSearch.fromMap(e)).toList();
   }
 
   Future<List<MLProductCaptureResult?>> searchProductWithPlugin(
-      MLProductVisionSearchAnalyzerSetting setting) async {
-    List res = json.decode(await _channel.invokeMethod(
-        mAnalyzeProductWithPlugin, setting.toMap()));
-    return res.map((e) => MLProductCaptureResult.fromJson(e)).toList();
+    MLProductVisionSearchAnalyzerSetting setting,
+  ) async {
+    final List<dynamic> res = json.decode(
+      await _channel.invokeMethod(
+        mAnalyzeProductWithPlugin,
+        setting.toMap(),
+      ),
+    );
+    return res.map((dynamic e) => MLProductCaptureResult.fromJson(e)).toList();
   }
 
   Future<bool> stopProductAnalyzer() async {
-    return await _channel.invokeMethod(mStopProductAnalyzer);
+    return await _channel.invokeMethod(
+      mStopProductAnalyzer,
+    );
   }
 }

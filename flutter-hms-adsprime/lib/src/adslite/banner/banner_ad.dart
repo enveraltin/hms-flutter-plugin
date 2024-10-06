@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,19 +14,33 @@
     limitations under the License.
 */
 
-part of huawei_adsprime;
+part of '../../../huawei_adsprime.dart';
 
 class BannerAd {
   static final Map<int, BannerAd?> bannerAds = <int, BannerAd?>{};
   int get id => hashCode;
 
   static const String _adType = 'Banner';
+
+  /// Ad slot ID
   String adSlotId;
+
+  /// Ad request parameters.
   AdParam adParam;
+
+  /// Banner ad size
   BannerAdSize size;
+
+  /// Refresh interval for banner ads.
+  ///
+  /// Refresh interval, in seconds. The value ranges from 30 to 120.
   int? bannerRefreshTime;
+
+  /// Obtains an ad listener.
   AdListener? _listener;
+
   late EventChannel _streamBanner;
+
   StreamSubscription<dynamic>? _listenerSub;
 
   BannerAd({
@@ -41,14 +55,16 @@ class BannerAd {
     _listener = listener;
   }
 
+  /// Sets an ad listener for an ad.
   set setAdListener(AdListener listener) {
     _listener = listener;
   }
 
+  /// Obtains an ad listener for an ad.
   AdListener? get getAdListener => _listener;
 
   Future<bool?> _initAd() async {
-    return Ads.instance.channelBanner.invokeMethod(
+    return await Ads.instance.channelBanner.invokeMethod(
       'initBannerAd',
       <String, dynamic>{
         'id': id,
@@ -59,10 +75,18 @@ class BannerAd {
     );
   }
 
+  /// Returns real-time bidding data.
+  Future<BiddingInfo?> getBiddingInfo() async {
+    return BiddingInfo.fromJson(await Ads.instance.channelBanner.invokeMethod(
+      'getBiddingInfo',
+    ));
+  }
+
+  /// Loads an ad.
   Future<bool?> loadAd() async {
-    _initAd();
+    await _initAd();
     _startListening();
-    return Ads.instance.channelBanner.invokeMethod(
+    return await Ads.instance.channelBanner.invokeMethod(
       'loadBannerAd',
       <String, dynamic>{
         'id': id,
@@ -72,8 +96,9 @@ class BannerAd {
     );
   }
 
-  Future<bool?> isLoading() {
-    return Ads.instance.channelBanner.invokeMethod(
+  /// Checks whether an ad is loading.
+  Future<bool?> isLoading() async {
+    return await Ads.instance.channelBanner.invokeMethod(
       'isAdLoading',
       <String, dynamic>{
         'id': id,
@@ -83,8 +108,9 @@ class BannerAd {
     );
   }
 
-  Future<bool?> pause() {
-    return Ads.instance.channelBanner.invokeMethod(
+  /// Pauses any additional processing related to an ad.
+  Future<bool?> pause() async {
+    return await Ads.instance.channelBanner.invokeMethod(
       'pauseAd',
       <String, dynamic>{
         'id': id,
@@ -94,8 +120,9 @@ class BannerAd {
     );
   }
 
-  Future<bool?> resume() {
-    return Ads.instance.channelBanner.invokeMethod(
+  /// Resumes an ad after the [pause()] method is called last time.
+  Future<bool?> resume() async {
+    return await Ads.instance.channelBanner.invokeMethod(
       'resumeAd',
       <String, dynamic>{
         'id': id,
@@ -105,6 +132,7 @@ class BannerAd {
     );
   }
 
+  /// Displays an ad.
   Future<bool?> show({
     Gravity gravity = Gravity.bottom,
     double offset = 0.0,
@@ -121,6 +149,7 @@ class BannerAd {
     return result;
   }
 
+  /// Destroys an ad.
   Future<bool?> destroy() async {
     bannerAds[id] = null;
     _listenerSub?.cancel();
@@ -150,6 +179,9 @@ class BannerAd {
   }
 }
 
+/// Enum that specifies where a banner ad should be displayed on the screen.
+///
+/// The options include `bottom`, `center`, and `top`.
 enum Gravity {
   bottom,
   center,

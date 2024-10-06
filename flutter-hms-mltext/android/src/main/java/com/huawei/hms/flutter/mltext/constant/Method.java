@@ -1,18 +1,18 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
-
-    Licensed under the Apache License, Version 2.0 (the "License")
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-*/
+ * Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package com.huawei.hms.flutter.mltext.constant;
 
@@ -25,13 +25,6 @@ public interface Method {
     String BANKCARD_DESTROY = "bankcard#destroy";
     String BANKCARD_IS_AVAILABLE = "bankcard#isAvailable";
     String BANKCARD_STOP = "bankcard#stop";
-
-    /**
-     * Permission methods
-     */
-    String REQUEST_PERMISSION = "requestPermission";
-    String HAS_CAMERA_PERMISSION = "hasCameraPermission";
-    String HAS_STORAGE_PERMISSION = "hasStoragePermission";
 
     /**
      * Form methods
@@ -64,7 +57,6 @@ public interface Method {
     String ANALYSE_WORDS_SIMILARITY = "analyseWordsSimilarity";
     String GET_VOCABULARY_VERSION = "getVocabularyVersion";
     String ANALYSE_WORD_VECTOR_BATCH = "analyseWordVectorBatch";
-
 
     /**
      * Document methods
@@ -104,6 +96,8 @@ public interface Method {
      */
     String SET_API_KEY = "setApiKey";
     String SET_ACCESS_TOKEN = "setAccessToken";
+    String SET_USER_REGION = "setUserRegion";
+    String GET_COUNTRY_CODE = "getCountryCode";
     String ENABLE_LOGGER = "enableLogger";
     String DISABLE_LOGGER = "disableLogger";
 }

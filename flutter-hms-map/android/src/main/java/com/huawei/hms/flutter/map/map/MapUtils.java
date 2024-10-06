@@ -1,18 +1,18 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
-
-    Licensed under the Apache License, Version 2.0 (the "License")
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-*/
+ * Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package com.huawei.hms.flutter.map.map;
 
@@ -125,7 +125,7 @@ class MapUtils {
     }
 
     void initCircles(final List<HashMap<String, Object>> initCircles) {
-        circleUtils.insertMulti(initCircles);
+        circleUtils.insertMulti(initCircles, messenger);
     }
 
     void initGroundOverlays(final List<HashMap<String, Object>> initGroundOverlays) {
@@ -209,7 +209,7 @@ class MapUtils {
                 break;
             }
             case Method.CIRCLES_UPDATE: {
-                circleUtils.insertMulti(call.argument(Param.CIRCLES_TO_INSERT));
+                circleUtils.insertMulti(call.argument(Param.CIRCLES_TO_INSERT), messenger);
                 circleUtils.updateMulti(call.argument(Param.CIRCLES_TO_UPDATE));
                 circleUtils.deleteMulti(call.argument(Param.CIRCLES_TO_DELETE));
                 result.success(true);
@@ -247,6 +247,13 @@ class MapUtils {
                 logger.startMethodExecutionTimer(Method.MARKER_START_ANIMATION);
                 markersUtils.startAnimation((String) markerId);
                 logger.sendSingleEvent(Method.MARKER_START_ANIMATION);
+                break;
+            }
+            case Method.CIRCLE_START_ANIMATION: {
+                final Object circleId = call.argument(Param.CIRCLE_ID);
+                logger.startMethodExecutionTimer(Method.CIRCLE_START_ANIMATION);
+                circleUtils.startAnimation((String) circleId);
+                logger.sendSingleEvent(Method.CIRCLE_START_ANIMATION);
                 break;
             }
             case Method.MARKERS_SHOW_INFO_WINDOW: {
@@ -288,6 +295,12 @@ class MapUtils {
                 logger.startMethodExecutionTimer(Method.MAP_IS_COMPASS_ENABLED);
                 result.success(huaweiMap.getUiSettings().isCompassEnabled());
                 logger.sendSingleEvent(Method.MAP_IS_COMPASS_ENABLED);
+                break;
+            }
+            case Method.MAP_IS_DARK: {
+                logger.startMethodExecutionTimer(Method.MAP_IS_DARK);
+                result.success(huaweiMap.isDark());
+                logger.sendSingleEvent(Method.MAP_IS_DARK);
                 break;
             }
             case Method.MAP_IS_MAP_TOOLBAR_ENABLED: {

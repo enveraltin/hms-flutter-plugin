@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,35 +14,41 @@
     limitations under the License.
 */
 
-import 'package:flutter/services.dart';
-import 'package:huawei_ml_image/src/common/base_image_analyzer.dart';
-import 'package:huawei_ml_image/src/common/constants.dart';
-import 'package:huawei_ml_image/src/common/method.dart';
-import 'package:huawei_ml_image/src/request/ml_object_analyzer_setting.dart';
-import 'package:huawei_ml_image/src/result/ml_object.dart';
+part of huawei_ml_image;
 
 class MLObjectAnalyzer
     implements BaseImageAnalyzer<List<MLObject>, MLObjectAnalyzerSetting> {
   late MethodChannel _channel;
 
   MLObjectAnalyzer() {
-    _channel = MethodChannel("$baseChannel.object");
+    _channel = const MethodChannel('$baseChannel.object');
   }
   @override
-  Future<List<MLObject>> analyseFrame(MLObjectAnalyzerSetting setting) async {
-    List res = await _channel.invokeMethod(mAnalyzeFrame, setting.toMap());
-    return res.map((e) => MLObject.fromMap(e)).toList();
+  Future<List<MLObject>> analyseFrame(
+    MLObjectAnalyzerSetting setting,
+  ) async {
+    final List<dynamic> res = await _channel.invokeMethod(
+      mAnalyzeFrame,
+      setting.toMap(),
+    );
+    return res.map((dynamic e) => MLObject.fromMap(e)).toList();
   }
 
   @override
   Future<List<MLObject>> asyncAnalyseFrame(
-      MLObjectAnalyzerSetting setting) async {
-    List res = await _channel.invokeMethod(mAsyncAnalyzeFrame, setting.toMap());
-    return res.map((e) => MLObject.fromMap(e)).toList();
+    MLObjectAnalyzerSetting setting,
+  ) async {
+    final List<dynamic> res = await _channel.invokeMethod(
+      mAsyncAnalyzeFrame,
+      setting.toMap(),
+    );
+    return res.map((dynamic e) => MLObject.fromMap(e)).toList();
   }
 
   @override
   Future<bool> stop() async {
-    return await _channel.invokeMethod(stopObject);
+    return await _channel.invokeMethod(
+      stopObject,
+    );
   }
 }

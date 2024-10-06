@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,18 +14,21 @@
     limitations under the License.
 */
 
-import 'dart:typed_data';
+part of huawei_ml_image;
 
 class MLDocumentSkewCorrectionResult {
-  Uint8List? bytes;
-  int? resultCode;
+  final Uint8List? bytes;
+  final int? resultCode;
 
-  MLDocumentSkewCorrectionResult({this.bytes, this.resultCode});
+  const MLDocumentSkewCorrectionResult._({
+    this.bytes,
+    this.resultCode,
+  });
 
   factory MLDocumentSkewCorrectionResult.fromJson(Map<dynamic, dynamic> json) {
-    return MLDocumentSkewCorrectionResult(
-      bytes: json['bytes'] ?? null,
-      resultCode: json['resultCode'] ?? null,
+    return MLDocumentSkewCorrectionResult._(
+      bytes: json['bytes'],
+      resultCode: json['resultCode'],
     );
   }
 }

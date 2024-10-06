@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -30,11 +30,8 @@ import com.huawei.hms.hihealth.options.ReadOptions;
 import com.huawei.hms.hihealth.options.UpdateOptions;
 import com.huawei.hms.hihealth.result.ReadReply;
 
-/**
- * All the tasks for {@link DataController} methods are used in {@link DefaultDataController} class.
- *
- * @since v.5.0.5
- */
+import java.util.List;
+
 public class DefaultDataController implements DataControllerService {
     private static final String TAG = DataControllerConstants.DATA_CONTROLLER_MODULE;
 
@@ -54,7 +51,7 @@ public class DefaultDataController implements DataControllerService {
 
         /* Calling the data controller to insert the sampling dataset. */
         insertTask.addOnSuccessListener(result -> {
-            /* result is void instance.*/
+            // result is void instance.
             Log.i(TAG, "insertData success");
             voidResultListener.onSuccess(result);
 
@@ -84,7 +81,7 @@ public class DefaultDataController implements DataControllerService {
 
         /*  Calling the data controller to delete the sampling dataset. */
         deleteTask.addOnSuccessListener(result -> {
-            /* result is void instance.*/
+            // result is void instance.
             Log.i(TAG, "deleteData success");
             voidResultListener.onSuccess(result);
         }).addOnFailureListener(error -> {
@@ -117,7 +114,7 @@ public class DefaultDataController implements DataControllerService {
 
         /* Calling the data controller to modify the sampling dataset. */
         updateTask.addOnSuccessListener(result -> {
-            /* result is void instance.*/
+            // result is void instance.
             Log.i(TAG, "updateData success");
             voidResultListener.onSuccess(result);
         }).addOnFailureListener(error -> {
@@ -147,7 +144,7 @@ public class DefaultDataController implements DataControllerService {
 
         /*  Calling the data controller to delete the sampling dataset. */
         readReplyTask.addOnSuccessListener(readReply -> {
-            /* result is ReadReply instance.*/
+            // result is ReadReply instance.
             Log.i(TAG, "readData success");
             dataResultListener.onSuccess(readReply);
         }).addOnFailureListener(error -> {
@@ -176,12 +173,40 @@ public class DefaultDataController implements DataControllerService {
          * When commissioning the API, you need to change the inserted data time to the current date
          * for data to be queried. */
         todaySummationTask.addOnSuccessListener(sampleSet -> {
-            /* result is ReadReply instance.*/
+            // result is ReadReply instance.
             Log.i(TAG, "readToday success");
             dataResultListener.onSuccess(sampleSet);
         });
         todaySummationTask.addOnFailureListener(error -> {
             Log.i(TAG, "readToday error");
+            dataResultListener.onFail(error);
+        });
+    }
+
+    /**
+     * Querying the Summary Fitness and Health Data of the User of the Current day for multiple data types.
+     *
+     * @param dataController {@link DataController} instance.
+     * @param dataTypes {@link List<DataType>} instance.
+     * @param dataResultListener {@link VoidResultListener} listener.
+     */
+    @Override
+    public void readTodayList(final DataController dataController, final List<DataType> dataTypes,
+        final ResultListener<List> dataResultListener) {
+        Log.i(TAG, "call readTodayList");
+        /* Use the specified data types to call the data controller to query
+         * the summary data of multiple data types of the current day. */
+        Task<List<SampleSet>> todaySummationTask = dataController.readTodaySummation(dataTypes);
+
+        /* Calling the data controller to query the summary data of the current day.
+         * Note: In this example, the inserted data time is fixed at 2020-03-17 09:05:00.
+         * When commissioning the API, you need to change the inserted data time to the current date
+         * for data to be queried. */
+        todaySummationTask.addOnSuccessListener(sampleSets -> {
+            // result is ReadReply instance.
+            dataResultListener.onSuccess(sampleSets);
+        });
+        todaySummationTask.addOnFailureListener(error -> {
             dataResultListener.onFail(error);
         });
     }
@@ -196,12 +221,12 @@ public class DefaultDataController implements DataControllerService {
     public void clearTaskData(final DataController dataController, final VoidResultListener dataResultListener) {
         Log.i(TAG, "call clearTaskData");
 
-        /* Call the clearAll method of the data controller to delete data
-        /* inserted by the current app from the device and cloud.*/
+        // Call the clearAll method of the data controller to delete data
+        // inserted by the current app from the device and cloud.
         Task<Void> clearTask = dataController.clearAll();
 
-        /* Calling the data controller to clear user data from the device and cloud.
-        /* Listener needs to be registered to monitor whether the clearance is successful or not. */
+        // Calling the data controller to clear user data from the device and cloud.
+        // Listener needs to be registered to monitor whether the clearance is successful or not.
         clearTask.addOnSuccessListener(result -> {
             Log.i(TAG, "clearTaskData success");
             dataResultListener.onSuccess(result);
@@ -229,12 +254,40 @@ public class DefaultDataController implements DataControllerService {
         Task<SampleSet> readDailySummationTask = dataController.readDailySummation(dataType, startTime, endTime);
 
         readDailySummationTask.addOnSuccessListener(sampleSet -> {
-            /* result is SampleSet instance.*/
+            // result is SampleSet instance.
             Log.i(TAG, "readDailySummation success");
             dataResultListener.onSuccess(sampleSet);
         });
         readDailySummationTask.addOnFailureListener(error -> {
             Log.i(TAG, "readDailySummation error");
+            dataResultListener.onFail(error);
+        });
+    }
+
+    /**
+     * Querying the Summary Fitness and Health Data of the User between selected dates for multiple data types.
+     *
+     * @param dataController {@link DataController} instance.
+     * @param dataTypes {@link List<DataType>} instance.
+     * @param startTime An 8-digit integer in the format of YYYYMMDD, for example, 20200803.
+     * @param endTime An 8-digit integer in the format of YYYYMMDD, for example, 20200903.
+     * @param dataResultListener {@link ResultListener } listener.
+     */
+    @Override
+    public void readDailySummationList(DataController dataController, List<DataType> dataTypes, int startTime, int endTime,
+                                       ResultListener<List> dataResultListener) {
+        Log.i(TAG, "call readDailySummationList");
+        /* Use the specified data types to call the data controller to query
+         * the summary data of this data type of the selected days. */
+        Task<List<SampleSet>> readDailySummationTask = dataController.readDailySummation(dataTypes, startTime, endTime);
+
+        readDailySummationTask.addOnSuccessListener(sampleSets -> {
+            // result is SampleSet instance.
+            Log.i(TAG, "readDailySummationList success");
+            dataResultListener.onSuccess(sampleSets);
+        });
+        readDailySummationTask.addOnFailureListener(error -> {
+            Log.i(TAG, "readDailySummationList error");
             dataResultListener.onFail(error);
         });
     }

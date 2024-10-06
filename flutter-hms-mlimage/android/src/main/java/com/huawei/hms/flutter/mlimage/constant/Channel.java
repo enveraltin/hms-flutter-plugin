@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.huawei.hms.flutter.mlimage.constant;
 
 public interface Channel {
     String BASE_CHANNEL = "huawei.hms.flutter.ml.image";
-    String PERMISSION_CHANNEL = BASE_CHANNEL + ".permission";
     String CLASSIFICATION_CHANNEL = BASE_CHANNEL + ".classification";
     String APPLICATION_CHANNEL = BASE_CHANNEL + ".application";
     String OBJECT_CHANNEL = BASE_CHANNEL + ".object";

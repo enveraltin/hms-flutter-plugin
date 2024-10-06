@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@
 package com.huawei.hms.flutter.mltext;
 
 import android.app.Activity;
+import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
 
 import com.huawei.hms.flutter.mltext.constant.Channel;
+import com.huawei.hms.flutter.mltext.customview.CustomizedViewMethodCallHandler;
 import com.huawei.hms.flutter.mltext.handlers.BankcardAnalyzerMethodHandler;
 import com.huawei.hms.flutter.mltext.handlers.DocumentAnalyzerMethodHandler;
 import com.huawei.hms.flutter.mltext.handlers.FormRecognitionMethodHandler;
@@ -30,7 +32,6 @@ import com.huawei.hms.flutter.mltext.handlers.LensHandler;
 import com.huawei.hms.flutter.mltext.handlers.TextAnalyzerMethodHandler;
 import com.huawei.hms.flutter.mltext.handlers.TextEmbeddingMethodHandler;
 import com.huawei.hms.flutter.mltext.mlapplication.MlApplicationMethodHandler;
-import com.huawei.hms.flutter.mltext.permissions.PermissionHandler;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -40,6 +41,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.view.TextureRegistry;
 
 public class HuaweiMlTextPlugin implements FlutterPlugin, ActivityAware {
+    public final static SparseArray<MethodChannel> ML_TEXT_CHANNELS = new SparseArray<>();
     private FlutterPluginBinding mFlutterPluginBinding;
     private MethodChannel textAnalyzerMethodChannel;
     private MethodChannel documentAnalyzerMethodChannel;
@@ -50,9 +52,13 @@ public class HuaweiMlTextPlugin implements FlutterPlugin, ActivityAware {
     private MethodChannel textEmbeddingMethodChannel;
     private MethodChannel mlApplicationMethodChannel;
     private MethodChannel lensMethodChannel;
-    private MethodChannel permissionChannel;
+    private MethodChannel customizedViewChannel;
+    private MethodChannel remoteViewChannel;
 
-    private void onAttachedToEngine(@NonNull final BinaryMessenger messenger, @NonNull final Activity activity, final TextureRegistry textureRegistry) {
+    private CustomizedViewMethodCallHandler customizedViewMethodCallHandler;
+
+    private void onAttachedToEngine(@NonNull final BinaryMessenger messenger, @NonNull final Activity activity,
+            final TextureRegistry textureRegistry) {
         initializeChannels(messenger);
         setHandlers(activity, textureRegistry);
     }
@@ -67,7 +73,8 @@ public class HuaweiMlTextPlugin implements FlutterPlugin, ActivityAware {
         textEmbeddingMethodChannel = new MethodChannel(messenger, Channel.TEXT_EMBEDDING_CHANNEL);
         mlApplicationMethodChannel = new MethodChannel(messenger, Channel.APPLICATION_CHANNEL);
         lensMethodChannel = new MethodChannel(messenger, Channel.LENS_CHANNEL);
-        permissionChannel = new MethodChannel(messenger, Channel.PERMISSION_CHANNEL);
+        customizedViewChannel = new MethodChannel(messenger, Channel.CUSTOMIZED_VIEW);
+        remoteViewChannel = new MethodChannel(messenger, Channel.REMOTE_VIEW);
     }
 
     private void setHandlers(final Activity activity, TextureRegistry textureRegistry) {
@@ -80,7 +87,8 @@ public class HuaweiMlTextPlugin implements FlutterPlugin, ActivityAware {
         textEmbeddingMethodChannel.setMethodCallHandler(new TextEmbeddingMethodHandler(activity));
         mlApplicationMethodChannel.setMethodCallHandler(new MlApplicationMethodHandler(activity));
         lensMethodChannel.setMethodCallHandler(new LensHandler(activity, lensMethodChannel, textureRegistry));
-        permissionChannel.setMethodCallHandler(new PermissionHandler(activity));
+        customizedViewMethodCallHandler = new CustomizedViewMethodCallHandler(activity, remoteViewChannel);
+        customizedViewChannel.setMethodCallHandler(customizedViewMethodCallHandler);
     }
 
     @Override
@@ -97,7 +105,9 @@ public class HuaweiMlTextPlugin implements FlutterPlugin, ActivityAware {
     @Override
     public void onAttachedToActivity(@NonNull ActivityPluginBinding activityPluginBinding) {
         if (mFlutterPluginBinding != null) {
-            onAttachedToEngine(mFlutterPluginBinding.getBinaryMessenger(), activityPluginBinding.getActivity(), mFlutterPluginBinding.getTextureRegistry());
+            onAttachedToEngine(mFlutterPluginBinding.getBinaryMessenger(), activityPluginBinding.getActivity(),
+                    mFlutterPluginBinding.getTextureRegistry());
+            activityPluginBinding.addActivityResultListener(customizedViewMethodCallHandler);
         }
     }
 
@@ -109,7 +119,8 @@ public class HuaweiMlTextPlugin implements FlutterPlugin, ActivityAware {
     @Override
     public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding activityPluginBinding) {
         if (mFlutterPluginBinding != null) {
-            onAttachedToEngine(mFlutterPluginBinding.getBinaryMessenger(), activityPluginBinding.getActivity(), mFlutterPluginBinding.getTextureRegistry());
+            onAttachedToEngine(mFlutterPluginBinding.getBinaryMessenger(), activityPluginBinding.getActivity(),
+                    mFlutterPluginBinding.getTextureRegistry());
         }
     }
 
@@ -122,7 +133,9 @@ public class HuaweiMlTextPlugin implements FlutterPlugin, ActivityAware {
         idCardChannel = null;
         mlApplicationMethodChannel = null;
         lensMethodChannel = null;
-        permissionChannel = null;
+        customizedViewChannel = null;
+        remoteViewChannel = null;
+        ML_TEXT_CHANNELS.clear();
     }
 
     @Override
@@ -135,6 +148,7 @@ public class HuaweiMlTextPlugin implements FlutterPlugin, ActivityAware {
         idCardChannel.setMethodCallHandler(null);
         mlApplicationMethodChannel.setMethodCallHandler(null);
         lensMethodChannel.setMethodCallHandler(null);
-        permissionChannel.setMethodCallHandler(null);
+        customizedViewChannel.setMethodCallHandler(null);
+        remoteViewChannel.setMethodCallHandler(null);
     }
 }

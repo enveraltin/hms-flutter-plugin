@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
     limitations under the License.
 */
 
-import 'package:flutter/services.dart';
+part of '../../huawei_ml_language.dart';
 
 class MLTranslateLanguage {
   late MethodChannel _c;
@@ -24,18 +24,26 @@ class MLTranslateLanguage {
   }
 
   Future<List<dynamic>> getCloudAllLanguages() async {
-    return await _c.invokeMethod("getCloudAllLanguages");
+    return await _c.invokeMethod(
+      'getCloudAllLanguages',
+    );
   }
 
   Future<List<dynamic>> getLocalAllLanguages() async {
-    return await _c.invokeMethod("getLocalAllLanguages");
+    return await _c.invokeMethod(
+      'getLocalAllLanguages',
+    );
   }
 
   Future<List<dynamic>> syncGetCloudAllLanguages() async {
-    return await _c.invokeMethod("syncGetCloudAllLanguages");
+    return await _c.invokeMethod(
+      'syncGetCloudAllLanguages',
+    );
   }
 
   Future<List<dynamic>> syncGetLocalAllLanguages() async {
-    return await _c.invokeMethod("syncGetLocalAllLanguages");
+    return await _c.invokeMethod(
+      'syncGetLocalAllLanguages',
+    );
   }
 }

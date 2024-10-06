@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,14 +14,21 @@
     limitations under the License.
 */
 
-class MLSceneDetection {
-  String? result;
-  dynamic confidence;
+part of huawei_ml_image;
 
-  MLSceneDetection({this.confidence, this.result});
+class MLSceneDetection {
+  final String? result;
+  final dynamic confidence;
+
+  const MLSceneDetection._({
+    this.confidence,
+    this.result,
+  });
 
   factory MLSceneDetection.fromJson(Map<dynamic, dynamic> json) {
-    return MLSceneDetection(
-        result: json['result'] ?? null, confidence: json['confidence'] ?? null);
+    return MLSceneDetection._(
+      result: json['result'],
+      confidence: json['confidence'],
+    );
   }
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -24,10 +24,11 @@ public interface Channel {
     String GCR_CHANNEL = BASE_CHANNEL + ".gcr";
     String FORM_CHANNEL = BASE_CHANNEL + ".form";
     String ICR_CHANNEL = BASE_CHANNEL + ".icr";
-    String PERMISSION_CHANNEL = BASE_CHANNEL + ".permission";
     String TEXT_EMBEDDING_CHANNEL = BASE_CHANNEL + ".text_embedding";
     String APPLICATION_CHANNEL = BASE_CHANNEL + ".application";
     String LENS_CHANNEL = BASE_CHANNEL + ".lens";
     String NO_SERVICE_WARNING = "Analyzer or engine must be initialized first!";
+    String CHANNEL_REMOTE_KEY = "channelRemoteId";
+    String CUSTOMIZED_VIEW = BASE_CHANNEL + ".customized_view";
+    String REMOTE_VIEW = BASE_CHANNEL + ".remote_view";
 }
-

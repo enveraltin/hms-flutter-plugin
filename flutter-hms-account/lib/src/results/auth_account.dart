@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -19,12 +19,15 @@ part of huawei_account;
 /// Signed-in ID information, including the ID, nickname, profile picture URI,
 /// permission, and access token.
 class AuthAccount {
+  @Deprecated('')
   String? accessToken;
   Account? account;
   String? serviceCountryCode;
   String? displayName;
   String? email;
+  @Deprecated('')
   String? familyName;
+  @Deprecated('')
   String? givenName;
   int? gender;
   List<dynamic>? authorizedScopes;

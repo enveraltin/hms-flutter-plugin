@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,34 +14,38 @@
     limitations under the License.
 */
 
-import 'package:flutter/material.dart';
+part of '../../huawei_ml_body.dart';
 
 class MLBodyLens extends StatefulWidget {
+  const MLBodyLens({
+    Key? key,
+    this.textureId,
+    this.width,
+    this.height,
+  }) : super(key: key);
+
   final int? textureId;
   final double? width;
   final double? height;
 
-  const MLBodyLens({Key? key, this.textureId, this.width, this.height})
-      : super(key: key);
-
   @override
-  _MLBodyLensState createState() => _MLBodyLensState();
+  State<MLBodyLens> createState() => _MLBodyLensState();
 }
 
 class _MLBodyLensState extends State<MLBodyLens> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.grey,
-        width: widget.width ?? MediaQuery.of(context).size.width * .8,
-        height: widget.height ?? MediaQuery.of(context).size.height * .8,
-        child: textureReady
-            ? Texture(textureId: widget.textureId!)
-            : const Center(
-                child: CircularProgressIndicator(
+      color: Colors.grey,
+      width: widget.width ?? MediaQuery.of(context).size.width * .8,
+      height: widget.height ?? MediaQuery.of(context).size.height * .8,
+      child: widget.textureId != null
+          ? Texture(textureId: widget.textureId!)
+          : const Center(
+              child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-              )));
+              ),
+            ),
+    );
   }
-
-  bool get textureReady => widget.textureId != null;
 }

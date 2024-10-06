@@ -1,24 +1,31 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
-
-    Licensed under the Apache License, Version 2.0 (the "License")
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-*/
+ * Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package com.huawei.hms.flutter.location.utils;
 
+import android.app.Notification;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import android.util.Log;
 
 import com.huawei.hms.location.HWLocation;
 import com.huawei.hms.location.LocationAvailability;
@@ -26,13 +33,17 @@ import com.huawei.hms.location.LocationRequest;
 import com.huawei.hms.location.LocationResult;
 import com.huawei.hms.location.LocationSettingsRequest;
 import com.huawei.hms.location.LocationSettingsStates;
+import com.huawei.hms.location.LogConfig;
 import com.huawei.hms.location.NavigationRequest;
 import com.huawei.hms.location.NavigationResult;
+import com.huawei.hms.support.api.entity.location.coordinate.LonLat;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -110,6 +121,7 @@ public interface LocationUtils {
         map.put("phone", hwLocation.getPhone());
         map.put("url", hwLocation.getUrl());
         map.put("extraInfo", hwLocation.getExtraInfo());
+        map.put("coordinateType", hwLocation.getCoordinateType());
 
         return map;
     }
@@ -238,6 +250,7 @@ public interface LocationUtils {
         result.setNeedAddress(ValueGetter.getBoolean("needAddress", map));
         result.setLanguage(ValueGetter.getString("language", map));
         result.setCountryCode(ValueGetter.getString("countryCode", map));
+        result.setCoordinateType(ValueGetter.getInt("coordinateType", map));
 
         final Map extras = ObjectUtils.cast(map.get("extras"), Map.class);
 
@@ -315,4 +328,166 @@ public interface LocationUtils {
 
         return builder.build();
     }
+
+    /**
+     * Utility method
+     *
+     * @param map HashMap representation of the LogConfig object
+     * @return LogConfig object
+     */
+    static LogConfig fromMapToLogConfig(final Map<String, Object> map) {
+        LogConfig logConfig = new LogConfig();
+        logConfig.setFileExpiredTime(ValueGetter.getInt("fileExpiredTime", map));
+        logConfig.setFileNum(ValueGetter.getInt("fileNum", map));
+        logConfig.setFileSize(ValueGetter.getInt("fileSize", map));
+        logConfig.setLogPath(ValueGetter.getString("logPath", map));
+
+        return logConfig;
+
+    }
+
+    /**
+     * Utility method
+     *
+     * @param logConfig LogConfig object
+     * @return HashMap representation of LogConfig object
+     */
+    static Map<String, Object> fromLogConfigToMap(LogConfig logConfig) {
+        if (logConfig == null) {
+            return Collections.emptyMap();
+        }
+
+        final Map<String, Object> map = new HashMap<>();
+
+        map.put("fileExpiredTime", logConfig.getFileExpiredTime());
+        map.put("fileNum", logConfig.getFileNum());
+        map.put("fileSize", logConfig.getFileSize());
+        map.put("logPath", logConfig.getLogPath());
+
+        return map;
+    }
+
+    /**
+     * Utility method
+     *
+     * @param hwLocations HWLocation object
+     * @return HashMap representation of HWLocation object
+     */
+    static List<Map<String, Object>> fromHWLocationListToMap(final List<HWLocation> hwLocations) {
+        if (hwLocations == null) {
+            return Collections.emptyList();
+        }
+
+        final List<Map<String, Object>> hwLocationList = new ArrayList<>();
+
+        for (final HWLocation hwLocation : hwLocations) {
+            hwLocationList.add(fromHWLocationToMap(hwLocation));
+        }
+
+        return hwLocationList;
+
+    }
+
+    /**
+     * Utility method
+     *
+     * @param context Context
+     * @param builder NotificationCompat.Builder
+     * @param map HashMap representation of the Notification object
+     * @return Notification object
+     */
+    static void fillNotificationBuilder(Context context, Notification.Builder builder, Map map) {
+        if (map.get("contentTitle") != null) {
+            builder = builder.setContentTitle(ValueGetter.getString("contentTitle", map));
+            Log.i(LocationUtils.class.getSimpleName(), String.valueOf(map.get("contentTitle")));
+        }
+        if (map.get("color") != null) {
+            if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+                builder = builder.setColor(ValueGetter.getInt("color", map));
+            }
+        }
+        if (map.get("colorized") != null) {
+            if (VERSION.SDK_INT >= VERSION_CODES.O) {
+                builder = builder.setColorized(ValueGetter.getBoolean("colorized", map));
+            }
+        }
+        if (map.get("contentInfo") != null) {
+            builder = builder.setContentInfo(ValueGetter.getString("contentInfo", map));
+        }
+        if (map.get("contentText") != null) {
+            builder = builder.setContentText(ValueGetter.getString("contentText", map));
+        }
+        if (map.get("smallIcon") != null) {
+            int resourceId = context.getResources()
+                    .getIdentifier(ValueGetter.getString("smallIcon", map), "drawable", context.getPackageName());
+            builder = builder.setSmallIcon(resourceId);
+        } else {
+            builder.setSmallIcon(
+                    context.getResources().getIdentifier("ic_launcher", "mipmap", context.getPackageName()));
+        }
+        if (map.get("largeIcon") != null) {
+            Bitmap bitmap = null;
+            try {
+                bitmap = BitmapFactory.decodeStream(context.getAssets().open(ValueGetter.getString("largeIcon", map)));
+            } catch (IOException | OutOfMemoryError e) {
+                Log.i("Bitmap", "An error occured, please try again.");
+            }
+            builder = builder.setLargeIcon(bitmap);
+        }
+        if (map.get("sound") != null) {
+            String sourceName = ValueGetter.getString("sound", map);
+            int resourceId = context.getResources().getIdentifier(sourceName, "raw", context.getPackageName());
+            Uri soundUri = Uri.parse(
+                    String.format(Locale.ENGLISH, "android.resource://%s/%s", context.getPackageName(), resourceId));
+            builder = builder.setSound(soundUri);
+        }
+        if (map.get("onGoing") != null) {
+            builder = builder.setOngoing(ValueGetter.getBoolean("onGoing", map));
+        }
+        if (map.get("subText") != null) {
+            builder = builder.setSubText(ValueGetter.getString("subText", map));
+        }
+        if (map.get("vibrate") != null) {
+            List<Integer> patternRA = (List<Integer>) map.get("vibrate");
+            int length = patternRA.size();
+            long[] pattern = new long[length];
+            for (int i = 0; i < length; i++) {
+                pattern[i] = (long) patternRA.get(i);
+            }
+            builder = builder.setVibrate(pattern);
+        }
+        if (map.get("visibility") != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                builder = builder.setVisibility(ValueGetter.getInt("visibility", map));
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setOngoing(true)
+                    .setPriority(ValueGetter.getInt("priority", map))
+                    .setCategory(ValueGetter.getString("category", map))
+                    .build();
+        }
+
+    }
+
+    /**
+     * Utility method
+     *
+     * @param lonLat LonLat object
+     * @return HashMap representation of LonLat object0
+     */
+    static Map<String, Object> fromLonLatToMap(LonLat lonLat) {
+        if (lonLat == null) {
+            return Collections.emptyMap();
+        }
+
+        final Map<String, Object> map = new HashMap<>();
+
+        map.put("latitude", lonLat.getLatitude());
+        map.put("longitude", lonLat.getLongitude());
+
+        return map;
+    }
+
 }

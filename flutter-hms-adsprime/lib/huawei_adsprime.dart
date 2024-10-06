@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import 'package:flutter/services.dart';
 
 part 'src/adslite/ad_param.dart';
 part 'src/adslite/ad_size.dart';
+part 'src/adslite/bidding_info.dart';
+part 'src/adslite/bidding_param.dart';
 part 'src/adslite/banner/banner_ad.dart';
 part 'src/adslite/banner/banner_ad_size.dart';
 part 'src/adslite/banner/banner_view.dart';
@@ -42,6 +44,8 @@ part 'src/adslite/nativead/native_ad.dart';
 part 'src/adslite/nativead/native_ad_configuration.dart';
 part 'src/adslite/nativead/native_ad_controller.dart';
 part 'src/adslite/nativead/native_styles.dart';
+part 'src/adslite/nativead/app_info.dart';
+part 'src/adslite/nativead/promote_info.dart';
 part 'src/adslite/request_options.dart';
 part 'src/adslite/reward/reward_ad.dart';
 part 'src/adslite/reward/reward_verify_config.dart';

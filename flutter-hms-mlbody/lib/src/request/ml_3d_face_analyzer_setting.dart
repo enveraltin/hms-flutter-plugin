@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
+
+part of '../../huawei_ml_body.dart';
 
 class ML3DFaceAnalyzerSetting {
   /// Precision preference mode.
@@ -28,14 +30,17 @@ class ML3DFaceAnalyzerSetting {
   int? performanceType;
   bool? tracingAllowed;
 
-  ML3DFaceAnalyzerSetting(
-      {required this.path, this.performanceType, this.tracingAllowed});
+  ML3DFaceAnalyzerSetting({
+    required this.path,
+    this.performanceType,
+    this.tracingAllowed,
+  });
 
   Map<String, dynamic> toMap() {
-    return {
-      "path": path,
-      "performanceType": performanceType ?? typePrecision,
-      "tracingAllowed": tracingAllowed ?? false
+    return <String, dynamic>{
+      'path': path,
+      'performanceType': performanceType ?? typePrecision,
+      'tracingAllowed': tracingAllowed ?? false,
     };
   }
 }

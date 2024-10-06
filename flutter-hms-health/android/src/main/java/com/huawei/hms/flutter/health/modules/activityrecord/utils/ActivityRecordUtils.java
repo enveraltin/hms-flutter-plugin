@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import com.huawei.hms.hihealth.data.Field;
 import com.huawei.hms.hihealth.data.MapValue;
 import com.huawei.hms.hihealth.data.PaceSummary;
 import com.huawei.hms.hihealth.data.SamplePoint;
+import com.huawei.hms.hihealth.data.SampleSection;
 import com.huawei.hms.hihealth.data.SampleSet;
 import com.huawei.hms.hihealth.data.ScopeLangItem;
 import com.huawei.hms.hihealth.data.Value;
@@ -68,7 +69,7 @@ public final class ActivityRecordUtils {
         }
         builder.setName(Utils.createEmptyStringIfNull(callMap, NAME_KEY));
         builder.setDesc(Utils.createEmptyStringIfNull(callMap, DESCRIPTION_KEY));
-        builder.setActivityTypeId(Utils.createEmptyStringIfNull(callMap, ACTIVITY_TYPE_KEY));
+        builder.setActivityTypeId((String) callMap.get(ACTIVITY_TYPE_KEY));
         if (Boolean.TRUE.equals(Utils.hasKey(callMap, ACTIVITY_SUMMARY_KEY))) {
             builder.setActivitySummary(
                 Utils.toActivitySummary((HashMap<String, Object>) callMap.get(ACTIVITY_SUMMARY_KEY), packageName));
@@ -177,14 +178,21 @@ public final class ActivityRecordUtils {
     }
 
     public static synchronized Map<String, Object> activitySummaryToMap(final ActivitySummary activitySummary) {
-        HashMap<String, Object> map = new HashMap<>();
+        final HashMap<String, Object> map = new HashMap<>();
         if (activitySummary != null) {
             map.put("paceSummary", paceSummaryToMap(activitySummary.getPaceSummary()));
-            ArrayList<Map<String, Object>> dataSummary = new ArrayList<>();
+
+            final ArrayList<Map<String, Object>> dataSummary = new ArrayList<>();
             for (SamplePoint point : activitySummary.getDataSummary()) {
                 dataSummary.add(samplePointToMap(point));
             }
             map.put("dataSummary", dataSummary);
+
+            final ArrayList<Map<String, Object>> sectionSummary = new ArrayList<>();
+            for (SampleSection section : activitySummary.getSectionSummary()) {
+                sectionSummary.add(sampleSectionToMap(section));
+            }
+            map.put("sectionSummary", sectionSummary);
         }
         return map;
     }
@@ -213,8 +221,24 @@ public final class ActivityRecordUtils {
             map.put("dataCollector", dataCollectorToMap(samplePoint.getDataCollector()));
             map.put("dataTypeId", samplePoint.getDataTypeId());
             map.put("dataType", dataTypeToMap(samplePoint.getDataType()));
-            map.put("insertionTime  ", (samplePoint.getInsertionTime(TimeUnit.MILLISECONDS)));
+            map.put("insertionTime", (samplePoint.getInsertionTime(TimeUnit.MILLISECONDS)));
             map.put("id", (int) samplePoint.getId());
+        }
+        return map;
+    }
+
+    public static synchronized Map<String, Object> sampleSectionToMap(final SampleSection sampleSection) {
+        final HashMap<String, Object> map = new HashMap<>();
+        if (sampleSection != null) {
+            map.put("sectionNum", sampleSection.getSectionNum());
+            map.put("sectionTime", sampleSection.getSectionTime(TimeUnit.MILLISECONDS));
+            map.put("startTime", sampleSection.getStartTime(TimeUnit.MILLISECONDS));
+            map.put("endTime", sampleSection.getEndTime(TimeUnit.MILLISECONDS));
+            final List<Map<String, Object>> sectionDataList = new ArrayList<>();
+            for (SamplePoint sp : sampleSection.getSectionDataList()) {
+                sectionDataList.add(samplePointToMap(sp));
+            }
+            map.put("sectionDataList", sectionDataList);
         }
         return map;
     }
@@ -313,6 +337,15 @@ public final class ActivityRecordUtils {
         return resultList;
     }
 
+    public static synchronized List<Map<String, Object>> listSampleSetToMap(
+            final List<SampleSet> sampleSets) {
+        ArrayList<Map<String, Object>> resultList = new ArrayList<>();
+        for (SampleSet sampleSet : sampleSets) {
+            resultList.add(sampleSetToMap(sampleSet));
+        }
+        return resultList;
+    }
+
     public static synchronized Map<String, Object> sampleSetToMap(final SampleSet sampleSet) {
         HashMap<String, Object> resultMap = new HashMap<>();
         resultMap.put("dataCollector", dataCollectorToMap(sampleSet.getDataCollector()));
@@ -327,10 +360,12 @@ public final class ActivityRecordUtils {
 
     public static synchronized Map<String, Object> scopeLangItemToMap(final ScopeLangItem scopeLangItem) {
         HashMap<String, Object> resultMap = new HashMap<>();
+        if (scopeLangItem != null){
         resultMap.put("appName", scopeLangItem.getAppName());
         resultMap.put("appIconPath", scopeLangItem.getAppIconPath());
         resultMap.put("authTime", scopeLangItem.getAuthTime());
         resultMap.put("url2Desc", scopeLangItem.getUrl2Desc());
+        }
         return resultMap;
     }
 
@@ -366,9 +401,6 @@ public final class ActivityRecordUtils {
         return builder.build();
     }
 
-    /**
-     * ActivityBuilder Record Types
-     */
     enum RecordTypes {
         ID,
         NAME

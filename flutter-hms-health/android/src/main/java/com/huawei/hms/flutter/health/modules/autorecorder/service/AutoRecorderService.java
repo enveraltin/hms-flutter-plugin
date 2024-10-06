@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,6 @@ import com.huawei.hms.hihealth.data.DataType;
 
 import java.util.Map;
 
-/**
- * Blueprint of {@link DefaultAutoRecorderService}.
- *
- * @since v.5.0.5
- */
 public interface AutoRecorderService {
     /**
      * Record data via DataType supported by Huawei.

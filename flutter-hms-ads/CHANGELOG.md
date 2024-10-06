@@ -1,3 +1,40 @@
+## 13.4.72+300
+
+- Added the `autoPlayNetwork` property to the `VideoConfiguration` class.
+- Added the `AutoPlayNetwork` enum.
+- Added the `getBiddingInfo` method to the to the `NativeAd`, `InstreamAd`, `RewardAd`, `InterstitialAd`, `InstreamAd`, `BannerAd` and `SplashAd`  classes.
+- Added the `tMax` property to the `AdParam` and `RequestOptions` classes.
+- Added the `addBiddingParamMap` and `setBiddingParamMap` methods to the `AdParam` and `RequestOptions` classes.
+- Added the `BiddingParam` and `BiddingInfo` classes.
+
+## 13.4.69+302
+
+- Added the `AppInfo` class which is the return type of `getAppInfo` method.
+- Added the `PromoteInfo` class which is the return type of `getPromoteInfo` method.
+- Added the `showAppDetailPage`, `getPromoteInfo`, `getAppInfo`, `showPrivacyPolicy`, `showPermissionPage` methods to the `NativeAdController` class.
+
+## 13.4.67+302
+
+- Added the `showTransparencyDialog` and `hideTransparencyDialog` methods to the `InstreamAdView` class.
+- Added the `isTransparencyOpen` and `getTransparencyTplUrl` methods to the `NativeAd` and `InstreamAd` classes.
+
+## 13.4.65+300
+
+- Updated Ads to the latest version 13.4.65.300.
+
+## 13.4.61+304
+
+- Optimized the landing page download experience.
+- Added the AdvertiserInfo class to obtain and display advertiser information, adapting the Russian advertising law.
+- Added the `hasAdvertiserInfo` and `getAdvertiserInfo` methods to the `InstreamAd` and `NativeAd` classes.
+- Added the `showAdvertiserInfoDialog` and `hideAdvertiserInfoDialog` methods to the `InstreamAdViewController` and `NativeAdController` classes.
+
+## 13.4.58+304
+
+- Optimized the feedback function of HUAWEI Ads for users to give comments.
+- Added the getInstallChannel method to the ReferrerDetails class to support the function of obtaining the channel information.
+- Fixed an issue that caused BannerAd listeners to not work properly.
+
 ## 13.4.55+301
 
 - Fixed an issue when destroying NativeAd.
@@ -51,3 +88,4 @@
 ## 13.4.32
 
 - Initial release.
+

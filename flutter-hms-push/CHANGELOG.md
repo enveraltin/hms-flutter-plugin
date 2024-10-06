@@ -1,3 +1,32 @@
+## 6.12.0+302
+
+- Fixed stability and performance issues.
+  > You are advised to use this version. To use it, you only need to update the version number and do not need to modify any code for adaptation.
+
+## 6.12.0+301
+
+- Minor optimization.
+
+## 6.12.0+300
+
+- To solve stability and performance problems, it is recommended that you use it integratedly. You only need to upgrade the version number, and no other code adaptation is required. 
+
+## 6.11.0+300
+
+- Fixed stability and performance issues. 
+  > You are advised to use this version. To use it, you only need to update the version number and do not need to modify any code for adaptation.
+
+## 6.10.0+300
+
+- Updated Push SDK to the latest version 6.10.0.300.
+- Resolved a performance-related issue.
+
+## 6.7.0+300
+
+- Updated Push SDK to the latest version 6.7.0.300.
+- Added the function of integrating the HMS Core Installer SDK to prompt users to download HMS Core (APK), ensuring that your app can normally use capabilities of HMS Core (APK).
+- Adapted to Android 13 (targetSdkVersion=33).
+
 ## 6.5.0+300
 
 - Updated Push SDK to the latest version 6.5.0.300.

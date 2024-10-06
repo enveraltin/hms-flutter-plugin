@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -206,6 +206,26 @@ class NativeAdController {
     return responseList;
   }
 
+  Future<void> showAppDetailPage() async {
+    await _channel.invokeMethod('showAppDetailPage');
+  }
+
+  Future<PromoteInfo> getPromoteInfo() async {
+    return PromoteInfo.fromJson(await _channel.invokeMethod('getPromoteInfo'));
+  }
+
+  Future<AppInfo> getAppInfo() async {
+    return AppInfo.fromJson(await _channel.invokeMethod('getAppInfo'));
+  }
+
+  Future<void> showPrivacyPolicy() async {
+    await _channel.invokeMethod('showPrivacyPolicy');
+  }
+
+  Future<void> showPermissionPage() async {
+    await _channel.invokeMethod('showPermissionPage');
+  }
+
   Future<bool?> destroy() {
     _listenerSub?.cancel();
     return Ads.instance.channel.invokeMethod(
@@ -213,6 +233,18 @@ class NativeAdController {
       <String, dynamic>{
         'id': id,
       },
+    );
+  }
+
+  Future<bool> isTransparencyOpen() async {
+    return await _channel.invokeMethod(
+      'isTransparencyOpen',
+    );
+  }
+
+  Future<String> transparencyTplUrl() async {
+    return await _channel.invokeMethod(
+      'transparencyTplUrl',
     );
   }
 

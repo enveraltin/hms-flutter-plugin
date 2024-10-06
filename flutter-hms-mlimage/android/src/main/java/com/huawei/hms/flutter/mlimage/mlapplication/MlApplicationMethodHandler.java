@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -27,6 +27,8 @@ import com.huawei.hms.flutter.mlimage.utils.FromMap;
 import com.huawei.hms.flutter.mlimage.utils.MLResponseHandler;
 import com.huawei.hms.mlsdk.common.MLApplication;
 
+import java.util.Objects;
+
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
@@ -51,6 +53,12 @@ public class MlApplicationMethodHandler implements MethodChannel.MethodCallHandl
             case Method.SET_ACCESS_TOKEN:
                 setAccessToken(call);
                 break;
+            case Method.SET_USER_REGION:
+                setUserRegion(call);
+                break;
+            case Method.GET_COUNTRY_CODE:
+                getCountryCode();
+                break;
             case Method.ENABLE_LOGGER:
                 enableLogger();
                 break;
@@ -59,20 +67,30 @@ public class MlApplicationMethodHandler implements MethodChannel.MethodCallHandl
                 break;
             default:
                 result.notImplemented();
-                break;
         }
     }
 
     private void setApiKey(@NonNull MethodCall call) {
-        String key = FromMap.toString(Param.KEY, call.argument(Param.KEY), false);
+        final String key = FromMap.toString(Param.KEY, call.argument(Param.KEY), false);
         MLApplication.getInstance().setApiKey(key);
         responseHandler.success(true);
     }
 
     private void setAccessToken(@NonNull MethodCall call) {
-        String key = FromMap.toString(Param.TOKEN, call.argument(Param.TOKEN), false);
+        final String key = FromMap.toString(Param.TOKEN, call.argument(Param.TOKEN), false);
         MLApplication.getInstance().setAccessToken(key);
         responseHandler.success(true);
+    }
+
+    private void setUserRegion(@NonNull MethodCall call) {
+        final Integer region = FromMap.toInteger("region", call.argument("region"));
+        MLApplication.getInstance().setUserRegion(Objects.requireNonNull(region));
+        responseHandler.success(true);
+    }
+
+    private void getCountryCode() {
+        final String countryCode = MLApplication.getInstance().getCountryCode();
+        responseHandler.success(countryCode);
     }
 
     private void enableLogger() {

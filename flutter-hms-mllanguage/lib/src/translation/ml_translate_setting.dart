@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,31 +14,47 @@
     limitations under the License.
 */
 
+part of '../../huawei_ml_language.dart';
+
 class MLTranslateSetting {
   String _sourceTextOnRemote;
   String? _sourceLangCode;
   String? _targetLangCode;
 
-  factory MLTranslateSetting.remote(
-      {required String sourceText,
-      String? sourceLangCode,
-      String? targetLangCode}) {
-    return MLTranslateSetting._(sourceText, sourceLangCode, targetLangCode);
+  MLTranslateSetting._(
+    this._sourceTextOnRemote, [
+    this._sourceLangCode,
+    this._targetLangCode,
+  ]);
+
+  factory MLTranslateSetting.remote({
+    required String sourceText,
+    String? sourceLangCode,
+    String? targetLangCode,
+  }) {
+    return MLTranslateSetting._(
+      sourceText,
+      sourceLangCode,
+      targetLangCode,
+    );
   }
 
-  factory MLTranslateSetting.local(
-      {String? sourceLangCode, String? targetLangCode}) {
-    return MLTranslateSetting._("", sourceLangCode, targetLangCode);
+  factory MLTranslateSetting.local({
+    String? sourceLangCode,
+    String? targetLangCode,
+  }) {
+    return MLTranslateSetting._(
+      '',
+      sourceLangCode,
+      targetLangCode,
+    );
   }
-
-  MLTranslateSetting._(this._sourceTextOnRemote,
-      [this._sourceLangCode, this._targetLangCode]);
 
   Map<String, dynamic> toMap() {
-    return {
-      "sourceText": _sourceTextOnRemote,
-      "sourceLang": _sourceLangCode ?? "en",
-      "targetLang": _targetLangCode ?? "zh"
+    return <String, dynamic>{
+      'sourceText': _sourceTextOnRemote,
+      'sourceLang': _sourceLangCode ?? 'en',
+      'targetLang': _targetLangCode ?? 'zh',
     };
   }
 }

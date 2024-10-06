@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,19 +14,27 @@
     limitations under the License.
 */
 
+part of '../../huawei_ml_text.dart';
+
 class TextBorder {
   int? bottom;
   int? left;
   int? right;
   int? top;
 
-  TextBorder({this.bottom, this.left, this.right, this.top});
+  TextBorder({
+    this.bottom,
+    this.left,
+    this.right,
+    this.top,
+  });
 
   factory TextBorder.fromMap(Map<dynamic, dynamic> map) {
     return TextBorder(
-        bottom: map['bottom'],
-        left: map['left'],
-        right: map['right'],
-        top: map['top']);
+      bottom: map['bottom'],
+      left: map['left'],
+      right: map['right'],
+      top: map['top'],
+    );
   }
 }

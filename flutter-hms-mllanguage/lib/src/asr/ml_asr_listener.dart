@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,23 +14,31 @@
     limitations under the License.
 */
 
-import 'dart:typed_data';
-
-part 'asr_callbacks.dart';
+part of '../../huawei_ml_language.dart';
 
 class MLAsrListener {
-  /// Error callback
-  _OnError onError;
+  /// Called when an error occures while speech recognition.
+  void Function(int error, String errorMessage) onError;
 
-  /// Result callback for FEATURE_ALLINONE
-  _OnResults? onResults;
+  /// If MLAsrConstants.FEATURE_WORDFLUX is selected,
+  /// recognition result will be returned with this function.
+  void Function(String result) onRecognizingResults;
 
-  /// Result callback for FEATURE_WORDFLUX
-  _OnRecognizingResults onRecognizingResults;
-  _OnVoiceDataReceived? onVoiceDataReceived;
-  _OnStartListening? onStartListening;
-  _OnState? onState;
-  _OnStartingOfSpeech? onStartingOfSpeech;
+  /// If MLAsrConstants.FEATURE_ALLINONE is selected,
+  /// recognition result will be returned with this function.
+  void Function(String result)? onResults;
+
+  /// Return the original PCM stream and audio power to the user.
+  void Function(Uint8List bytes)? onVoiceDataReceived;
+
+  /// Called when the recorder starts to receive speech.
+  void Function()? onStartListening;
+
+  /// Called when user starts to speak.
+  void Function()? onStartingOfSpeech;
+
+  /// Notifies the app status change.
+  void Function(int state)? onState;
 
   MLAsrListener({
     required this.onRecognizingResults,

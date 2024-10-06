@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,40 +14,44 @@
     limitations under the License.
 */
 
+part of huawei_ml_image;
+
 class MLObjectAnalyzerSetting {
   static const int TYPE_PICTURE = 0;
-
   static const int TYPE_VIDEO = 1;
 
-  String path;
-  bool? allowMultiResults;
-  bool? allowClassification;
-  int? analyzerType;
+  final String path;
+  final bool? allowMultiResults;
+  final bool? allowClassification;
+  final int? analyzerType;
 
-  factory MLObjectAnalyzerSetting.create(
-      {required String path,
-      bool? allowMultiResults,
-      bool? allowClassification,
-      int? analyzerType}) {
+  const MLObjectAnalyzerSetting._({
+    required this.path,
+    this.analyzerType,
+    this.allowClassification,
+    this.allowMultiResults,
+  });
+
+  factory MLObjectAnalyzerSetting.create({
+    required String path,
+    bool? allowMultiResults,
+    bool? allowClassification,
+    int? analyzerType,
+  }) {
     return MLObjectAnalyzerSetting._(
-        path: path,
-        allowClassification: allowClassification,
-        allowMultiResults: allowMultiResults,
-        analyzerType: analyzerType);
+      path: path,
+      allowClassification: allowClassification,
+      allowMultiResults: allowMultiResults,
+      analyzerType: analyzerType,
+    );
   }
 
-  MLObjectAnalyzerSetting._(
-      {required this.path,
-      this.analyzerType,
-      this.allowClassification,
-      this.allowMultiResults});
-
   Map<String, dynamic> toMap() {
-    return {
-      "path": path,
-      "analyzerType": analyzerType ?? TYPE_PICTURE,
-      "allowMultiResults": allowMultiResults ?? true,
-      "allowClassification": allowClassification ?? true
+    return <String, dynamic>{
+      'path': path,
+      'analyzerType': analyzerType ?? TYPE_PICTURE,
+      'allowMultiResults': allowMultiResults ?? true,
+      'allowClassification': allowClassification ?? true,
     };
   }
 }

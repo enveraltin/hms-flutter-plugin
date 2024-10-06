@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -221,6 +221,16 @@ class _InstallReferrerPageContentState
                   const SizedBox(height: 10),
                   Text(
                     '${_referrerDetails?.getReferrerBeginTimeStampMillisecond ?? " "}',
+                    style: Styles.textContentStyle,
+                  ),
+                  const SizedBox(height: 30),
+                  const Text(
+                    'Install Channel',
+                    style: Styles.headerTextStyle,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    '${_referrerDetails?.getInstallChannel ?? " "}',
                     style: Styles.textContentStyle,
                   ),
                 ],

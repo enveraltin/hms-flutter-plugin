@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,12 +14,14 @@
     limitations under the License.
 */
 
-part of huawei_push;
+part of '../../huawei_push.dart';
 
 /// A class provided by the aggregation capability package for setting basic attributes.
 abstract class ProxySettings {
   /// Sets a country/region code. This method is available only for Huawei-developed apps.
-  static Future<void> setCountryCode(String countryCode) async {
+  static Future<void> setCountryCode(
+    String countryCode,
+  ) async {
     await _methodChannel.invokeMethod<void>(
       'setCountryCode',
       <String, String>{

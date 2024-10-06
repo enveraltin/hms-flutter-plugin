@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -185,11 +185,11 @@ class _BannerAdPageState extends State<BannerAdPage> {
                   'Load Ad',
                   style: Styles.adControlButtonStyle,
                 ),
-                onPressed: () {
-                  _bannerAd?.destroy();
-                  _bannerAd = createAd()
-                    ..loadAd()
-                    ..show();
+                onPressed: () async {
+                  await _bannerAd?.destroy();
+                  _bannerAd = createAd();
+                  await _bannerAd!.loadAd();
+                  await _bannerAd!.show();
                 },
               ),
             ),

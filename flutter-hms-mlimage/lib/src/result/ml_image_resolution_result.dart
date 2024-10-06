@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,14 +14,18 @@
     limitations under the License.
 */
 
-import 'dart:typed_data';
+part of huawei_ml_image;
 
 class MLImageSuperResolutionResult {
-  Uint8List? bytes;
+  final Uint8List? bytes;
 
-  MLImageSuperResolutionResult({this.bytes});
+  const MLImageSuperResolutionResult._({
+    this.bytes,
+  });
 
   factory MLImageSuperResolutionResult.fromMap(Map<dynamic, dynamic> json) {
-    return MLImageSuperResolutionResult(bytes: json['bytes'] ?? null);
+    return MLImageSuperResolutionResult._(
+      bytes: json['bytes'],
+    );
   }
 }

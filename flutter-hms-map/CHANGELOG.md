@@ -1,7 +1,41 @@
+## 6.11.2+303
+
+- Dart improvements.
+
+## 6.11.2+302
+
+- Minor optimization and bug fixes.
+
+## 6.11.2+301
+
+- Updated Huawei Map SDK version to 6.11.2.301.
+
+## 6.11.0+304
+
+- **Breaking Change:** Renamed the HmsMarkerAnimation, HmsMarkerAlphaAnimation, HmsMarkerRotateAnimation, HmsMarkerScaleAnimation and HmsMarkerTranslateAnimation classes to HmsAnimation, HmsAlphaAnimation, HmsRotateAnimation, HmsScaleAnimation and HmsTranslateAnimation respectively. 
+
+- Updated Huawei Map SDK version to 6.11.0.304.
+- Added **animation** property to Circle class. Currently only the HmsTranslateAnimation is supported on Circles.
+- Added **getScalePerPixel** method to HuaweiMapController class. This method is used to obtain the length of one pixel point on the map at the current zoom level.
+- Added **myLocationStyle** property to HuaweiMap class. This property is used to set my-location icon style.
+- Added **gradient** property to Polyline class. This property is used to set gradient for a polyline.
+- Added **colorValues** property to Polyline class. This property is used to set colors for different segments of a polyline.
+- Fixed the bug that prevents **clickable** property of Marker class. 
+- Updated targetSdkVersion to 33, to make sure that your app can run properly on Android 13.
+
+## 6.9.0+300
+
+- **Breaking Change:** Modified the internal structure of the plugin. Please use import **package:huawei_map/huawei_map.dart** not to get any errors.
+
+- Added the **setAccessToken** method to the `HuaweiMapInitializer` class.
+- Added the **routePolicy** parameter to the `HuaweiMapInitializer.initializeMap` method.
+- Added the **isDark** parameter to the `HuaweiMap` class. The parameter are used to specify whether to enable the dark mode after the map is loaded.
+- Added the **isDark** parameter to the `HuaweiMapOptions` class. The parameter are used to specify whether to enable the dark mode before the map is loaded.
+
 ## 6.5.0+301
 
 - Updated Huawei Map SDK version to 6.5.0.301.
-- [Breaking Change]  Added the requirement of calling the HuaweiMapInitializer.initializeMap API before using the latest SDK.
+- [Breaking Change] Added the requirement of calling the HuaweiMapInitializer.initializeMap API before using the latest SDK.
 - Added the Heatmap function, allowing you to add, modify, delete, and customize a heatmap layer.
 - Added the convertCoordinate and convertCoordinates API, which converts WGS84 coordinates into GCJ02 coordinates.
 

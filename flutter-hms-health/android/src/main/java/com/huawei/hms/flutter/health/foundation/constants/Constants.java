@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ public interface Constants {
     String BASE_MODULE_NAME = "HMSFlutterHealth";
 
     /**
-     * Constant Variable Keys That Will be Used among RN Side.
+     * Constant Variable Keys That Will be Used among Flutter Side.
      */
     String ID_KEY = "id";
     String NAME_KEY = "name";
@@ -41,17 +41,11 @@ public interface Constants {
     String FORMAT_KEY = "format";
     String TIME_UNIT_KEY = "timeUnit";
     String DATA_TYPE_KEY = "dataType";
+    String DATA_TYPE_NAME_KEY = "dataTypeName";
     String IS_SUCCESS_KEY = "isSuccess";
     String DATA_COLLECTOR_KEY = "dataCollector";
     String FIELDS_KEY = "fields";
 
-    /**
-     * Returns a {@link DataType} constant from the dataTypeName by using reflection on {@link DataType} class. If a
-     * match is not found null is returned.
-     *
-     * @param dataTypeName The name of the data type to be converted.
-     * @return DataType constant If the name matches, otherwise null.
-     */
     static DataType toDataType(String dataTypeName) {
         java.lang.reflect.Field[] declaredFields = DataType.class.getDeclaredFields();
         List<java.lang.reflect.Field> staticFields = new ArrayList<>();
@@ -80,7 +74,7 @@ public interface Constants {
      * @param fieldName The name of the field to be converted.
      * @return Field constant If the name matches, otherwise null.
      */
-    static Field toField(String fieldName) {
+    static Field toField(String fieldName, int format) {
         java.lang.reflect.Field[] declaredFields = Field.class.getDeclaredFields();
         List<java.lang.reflect.Field> staticFields = new ArrayList<>();
         for (java.lang.reflect.Field field : declaredFields) {
@@ -91,7 +85,7 @@ public interface Constants {
         for (java.lang.reflect.Field field : staticFields) {
             try {
                 Field f = (Field) field.get(null);
-                if (f.getName().equals(fieldName)) {
+                if (f.getName().equals(fieldName) && f.getFormat() == format) {
                     return f;
                 }
             } catch (IllegalAccessException e) {

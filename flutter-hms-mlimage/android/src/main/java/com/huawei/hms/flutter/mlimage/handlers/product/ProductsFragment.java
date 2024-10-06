@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -48,6 +48,7 @@ public class ProductsFragment extends MLProductVisionSearchCapture.AbstractProdu
     private final MethodChannel.Result mResult;
     private final List<MLRealProductBean> mlProducts = new ArrayList<>();
     private BottomSheetAdapter adapter;
+    private boolean isReplySubmitted = false;
 
     public ProductsFragment(Context context, MethodChannel.Result result) {
         this.context = context;
@@ -90,7 +91,10 @@ public class ProductsFragment extends MLProductVisionSearchCapture.AbstractProdu
         adapter.notifyDataSetChanged();
 
         HMSLogger.getInstance(context).sendSingleEvent("analyzeProductWithPlugin");
-        mResult.success(pluginProductResultToJSON(list).toString());
+        if (!isReplySubmitted) {
+            isReplySubmitted = true;
+            mResult.success(pluginProductResultToJSON(list).toString());
+        }
     }
 
     @Override

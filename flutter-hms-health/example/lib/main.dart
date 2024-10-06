@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -18,26 +18,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:huawei_health/huawei_health.dart';
 
+const String packageName = '<package_name>';
+
 void main() {
-  runApp(const HealthKitDemo());
+  runApp(const _App());
 }
 
-/// Options for logging.
-enum LogOptions {
-  call,
-  success,
-  error,
-  custom,
-}
-
-class HealthKitDemo extends StatefulWidget {
-  const HealthKitDemo({Key? key}) : super(key: key);
+class _App extends StatelessWidget {
+  const _App({Key? key}) : super(key: key);
 
   @override
-  _HealthKitDemoState createState() => _HealthKitDemoState();
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: Home(),
+    );
+  }
 }
 
-class _HealthKitDemoState extends State<HealthKitDemo> {
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   /// Styles
   static const TextStyle cardTitleTextStyle = TextStyle(
     fontWeight: FontWeight.w500,
@@ -80,14 +85,14 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
     String log = '';
     switch (logOption) {
       case LogOptions.call:
-        log = methodName + ' called';
+        log = '$methodName called';
         break;
       case LogOptions.success:
-        log = methodName + ' [Success: $result] ';
+        log = '$methodName [Success: $result] ';
         break;
       case LogOptions.error:
-        log = methodName +
-            '[Error: $error] [Error Description: ${HiHealthStatusCodes.getStatusCodeMessage(error ?? '')}]';
+        log =
+            '$methodName [Error: $error] [Error Description: ${HiHealthStatusCodes.getStatusCodeMessage(error ?? '')}]';
         break;
       case LogOptions.custom:
         log = methodName; // Custom text
@@ -95,43 +100,73 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
     }
     debugPrint(log);
     setState(() {
-      controller.text = log + '\n' + controller.text;
+      controller.text = '$log\n${controller.text}';
     });
   }
 
   /// Authorizes Huawei Health Kit for the user, with defined scopes.
-  void signIn(BuildContext context) async {
+  void signIn() async {
     // List of scopes to ask for authorization.
     //
     // Note: These scopes should also be authorized on the Huawei Developer Console.
-    List<Scope> scopes = <Scope>[
-      Scope.HEALTHKIT_HEIGHTWEIGHT_READ,
-      Scope.HEALTHKIT_HEIGHTWEIGHT_WRITE,
-      Scope.HEALTHKIT_ACTIVITY_WRITE,
+    final List<Scope> scopes = <Scope>[
       Scope.HEALTHKIT_ACTIVITY_READ,
-      Scope.HEALTHKIT_HEARTRATE_READ,
-      Scope.HEALTHKIT_HEARTRATE_WRITE,
-      Scope.HEALTHKIT_STEP_WRITE,
-      Scope.HEALTHKIT_STEP_READ,
-      Scope.HEALTHKIT_STEP_REALTIME,
-      Scope.HEALTHKIT_DISTANCE_WRITE,
-      Scope.HEALTHKIT_DISTANCE_READ,
-      Scope.HEALTHKIT_SPEED_WRITE,
-      Scope.HEALTHKIT_SPEED_READ,
-      Scope.HEALTHKIT_LOCATION_WRITE,
-      Scope.HEALTHKIT_LOCATION_READ,
-      Scope.HEALTHKIT_ACTIVITY_RECORD_WRITE,
-      Scope.HEALTHKIT_ACTIVITY_RECORD_READ,
+      Scope.HEALTHKIT_ACTIVITY_WRITE,
+      Scope.HEALTHKIT_BLOODGLUCOSE_READ,
+      Scope.HEALTHKIT_BLOODGLUCOSE_WRITE,
       Scope.HEALTHKIT_CALORIES_READ,
       Scope.HEALTHKIT_CALORIES_WRITE,
+      Scope.HEALTHKIT_DISTANCE_READ,
+      Scope.HEALTHKIT_DISTANCE_WRITE,
+      Scope.HEALTHKIT_HEARTRATE_READ,
+      Scope.HEALTHKIT_HEARTRATE_WRITE,
+      Scope.HEALTHKIT_HEIGHTWEIGHT_READ,
+      Scope.HEALTHKIT_HEIGHTWEIGHT_WRITE,
+      Scope.HEALTHKIT_LOCATION_READ,
+      Scope.HEALTHKIT_LOCATION_WRITE,
+      Scope.HEALTHKIT_PULMONARY_READ,
+      Scope.HEALTHKIT_PULMONARY_WRITE,
+      Scope.HEALTHKIT_SLEEP_READ,
+      Scope.HEALTHKIT_SLEEP_WRITE,
+      Scope.HEALTHKIT_SPEED_READ,
+      Scope.HEALTHKIT_SPEED_WRITE,
+      Scope.HEALTHKIT_STEP_READ,
+      Scope.HEALTHKIT_STEP_WRITE,
+      Scope.HEALTHKIT_STRENGTH_READ,
+      Scope.HEALTHKIT_STRENGTH_WRITE,
+      Scope.HEALTHKIT_BODYFAT_READ,
+      Scope.HEALTHKIT_BODYFAT_WRITE,
+      Scope.HEALTHKIT_NUTRITION_READ,
+      Scope.HEALTHKIT_NUTRITION_WRITE,
+      Scope.HEALTHKIT_BLOODPRESSURE_READ,
+      Scope.HEALTHKIT_BLOODPRESSURE_WRITE,
+      Scope.HEALTHKIT_BODYTEMPERATURE_READ,
+      Scope.HEALTHKIT_BODYTEMPERATURE_WRITE,
+      Scope.HEALTHKIT_OXYGENSTATURATION_READ,
+      Scope.HEALTHKIT_OXYGENSTATURATION_WRITE,
+      Scope.HEALTHKIT_REPRODUCTIVE_READ,
+      Scope.HEALTHKIT_REPRODUCTIVE_WRITE,
+      Scope.HEALTHKIT_ACTIVITY_RECORD_READ,
+      Scope.HEALTHKIT_ACTIVITY_RECORD_WRITE,
+      Scope.HEALTHKIT_HEARTRATE_REALTIME,
+      Scope.HEALTHKIT_STEP_REALTIME,
+      Scope.HEALTHKIT_HEARTHEALTH_WRITE,
+      Scope.HEALTHKIT_HEARTHEALTH_READ,
+      Scope.HEALTHKIT_STRESS_WRITE,
+      Scope.HEALTHKIT_STRESS_READ,
+      Scope.HEALTHKIT_OXYGEN_SATURATION_WRITE,
+      Scope.HEALTHKIT_OXYGEN_SATURATION_READ,
+      Scope.HEALTHKIT_HISTORYDATA_OPEN_WEEK,
+      Scope.HEALTHKIT_HISTORYDATA_OPEN_MONTH,
+      Scope.HEALTHKIT_HISTORYDATA_OPEN_YEAR,
     ];
     try {
       AuthHuaweiId? result = await HealthAuth.signIn(scopes);
       debugPrint(
-          'Granted Scopes for User(${result?.displayName}): ${result?.grantedScopes?.toString()}');
+        'Granted Scopes for User(${result?.displayName}): ${result?.grantedScopes?.toString()}',
+      );
       showSnackBar(
         'Authorization Success.',
-        context,
         color: Colors.green,
       );
       setState(() => accessToken = result?.accessToken);
@@ -140,7 +175,6 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
       showSnackBar(
         'Error on authorization, Error:${e.toString()}, Error Description: '
         '${HiHealthStatusCodes.getStatusCodeMessage(e.message ?? '')}',
-        context,
       );
     }
   }
@@ -181,14 +215,31 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
             '1.0': 263.0,
           },
         ),
-        dataSummary: <SamplePoint>[],
+        dataSummary: <SamplePoint>[ 
+          SamplePoint( 
+            dataType: DataType.DT_CONTINUOUS_DISTANCE_TOTAL,
+            startTime: startTime.add(Duration(seconds: 1)),
+            endTime: endTime.subtract(Duration(seconds: 1)),
+            fieldValueOptions: FieldFloat(Field.FIELD_DISTANCE, 400),
+            timeUnit: TimeUnit.MILLISECONDS,
+          ),
+          SamplePoint(
+            dataType: DataType.POLYMERIZE_CONTINUOUS_SPEED_STATISTICS,
+            fieldValueOptions: FieldFloat(Field.FIELD_AVG, 60.0),
+            startTime: startTime.add(Duration(seconds: 1)),
+            endTime: endTime.subtract(Duration(seconds: 1)),
+            timeUnit: TimeUnit.MILLISECONDS,
+          )
+            ..setFieldValue(Field.FIELD_MIN, 40.0)
+            ..setFieldValue(Field.FIELD_MAX, 80.0),
+        ]
       ),
     );
 
     // Build the dataCollector object
     DataCollector dataCollector = DataCollector(
       dataGenerateType: DataGenerateType.DATA_TYPE_RAW,
-      dataType: DataType.DT_CONTINUOUS_STEPS_DELTA,
+      dataType: DataType.DT_INSTANTANEOUS_STEPS_RATE,
       name: 'AddActivityRecord1923',
     );
 
@@ -197,9 +248,9 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
     List<SamplePoint> samplePoints = <SamplePoint>[
       SamplePoint(
         dataCollector: dataCollector,
-        startTime: startTime,
-        endTime: endTime,
-        fieldValueOptions: FieldInt(Field.FIELD_STEPS_DELTA, 1024),
+        startTime: startTime.add(Duration(seconds: 1)),
+        endTime: endTime.subtract(Duration(seconds: 1)),
+        fieldValueOptions: FieldFloat(Field.FIELD_STEP_RATE, 10.0),
         timeUnit: TimeUnit.MILLISECONDS,
       ),
     ];
@@ -248,12 +299,12 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
 
     ActivityRecordReadOptions activityRecordReadOptions =
         ActivityRecordReadOptions(
-      activityRecordId: null,
+      activityRecordId: "ActivityRecordId0",
       activityRecordName: null,
       startTime: startTime,
       endTime: endTime,
       timeUnit: TimeUnit.MILLISECONDS,
-      // dataType: DataType.DT_CONTINUOUS_STEPS_DELTA,
+      dataType: DataType.DT_INSTANTANEOUS_STEPS_RATE,
     );
     try {
       List<ActivityRecord> result =
@@ -264,9 +315,7 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
         'getActivityRecord',
         _activityTextController,
         LogOptions.success,
-        result: '[IDs: ' +
-            result.map((ActivityRecord e) => e.id).toList().toString() +
-            ']',
+        result: '[IDs: ${result.map((ActivityRecord e) => e.id).toList()}]',
       );
     } on PlatformException catch (e) {
       log(
@@ -358,9 +407,7 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
         'endAllActivityRecords',
         _activityTextController,
         LogOptions.success,
-        result: '[IDs: ' +
-            result.map((ActivityRecord e) => e.id).toList().toString() +
-            ']',
+        result: '[IDs: ${result.map((ActivityRecord e) => e.id).toList()}]',
       );
     } on PlatformException catch (e) {
       log(
@@ -388,14 +435,7 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
       LogOptions.call,
     );
     try {
-      _dataController = await DataController.init(
-        <HiHealthOption>[
-          HiHealthOption(DataType.DT_CONTINUOUS_STEPS_DELTA, AccessType.read),
-          HiHealthOption(DataType.DT_CONTINUOUS_STEPS_DELTA, AccessType.write),
-          HiHealthOption(DataType.DT_INSTANTANEOUS_HEIGHT, AccessType.read),
-          HiHealthOption(DataType.DT_INSTANTANEOUS_HEIGHT, AccessType.write),
-        ],
-      );
+      _dataController = await DataController.init();
       log(
         'init',
         _dataTextController,
@@ -413,25 +453,12 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
 
   /// Clears all the data inserted by the app.
   void clearAll() async {
-    log(
-      'clearAll',
-      _dataTextController,
-      LogOptions.call,
-    );
+    log('clearAll', _dataTextController, LogOptions.call);
     try {
       await _dataController.clearAll();
-      log(
-        'clearAll',
-        _dataTextController,
-        LogOptions.success,
-      );
+      log('clearAll', _dataTextController, LogOptions.success);
     } on PlatformException catch (e) {
-      log(
-        'clearAll',
-        _dataTextController,
-        LogOptions.error,
-        error: e.message,
-      );
+      log('clearAll', _dataTextController, LogOptions.error, error: e.message);
     }
   }
 
@@ -563,29 +590,29 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
     }
   }
 
-  /// Reads the daily summation between the dates: `2020.10.02` to `2020.12.15`
+  /// Reads the daily summation between the dates: `2020.10.02` to `2020.12.15` for multiple data types.
   /// Note that the time format is different for this method.
-  void readDailySummation() async {
+  void readDailySummationList() async {
     log(
-      'readDailySummation',
+      'readDailySummationList',
       _dataTextController,
       LogOptions.call,
     );
     try {
-      SampleSet? sampleSet = await _dataController.readDailySummation(
-        DataType.DT_CONTINUOUS_STEPS_DELTA,
+      List<SampleSet?>? sampleSets = await _dataController.readDailySummationList(
+        [DataType.DT_CONTINUOUS_STEPS_DELTA,DataType.DT_CONTINUOUS_CALORIES_BURNT],
         20201002,
         20201003,
       );
       log(
-        'readDailySummation',
+        'readDailySummationList',
         _dataTextController,
         LogOptions.success,
-        result: sampleSet.toString(),
+        result: sampleSets.toString(),
       );
     } on PlatformException catch (e) {
       log(
-        'readDailySummation',
+        'readDailySummationList',
         _dataTextController,
         LogOptions.error,
         error: e.message,
@@ -697,7 +724,7 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
       // of the app. Otherwise, the creation fails. If the same data type is tried to
       // be added again an exception will be thrown.
       DataTypeAddOptions options = DataTypeAddOptions(
-        'com.huawei.hms.flutter.health_example.myCustomDataType',
+        '$packageName.myCustomDataType',
         <Field>[
           const Field.newIntField('myIntField'),
           Field.FIELD_ALTITUDE,
@@ -731,7 +758,7 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
     );
     try {
       final DataType dataTypeResult = await SettingController.readDataType(
-        'com.huawei.hms.flutter.health_example.myCustomDataType',
+        '$packageName.myCustomDataType',
       );
       log(
         'readDataType',
@@ -844,7 +871,6 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
     );
     debugPrint(res.authAccount?.accessToken);
   }
-
   //
   //
   // End of SettingController Methods
@@ -1050,24 +1076,62 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
       LogOptions.call,
     );
     try {
-      final DateTime startTime = DateTime(2022, 10, 11);
-      final DateTime endTime = DateTime(2022, 10, 12);
+      final DateTime startTime = DateTime(2023, 5, 11);
+      final DateTime endTime = DateTime(2023, 5, 13);
+
+      DataCollector contDataCollector = DataCollector(
+        dataStreamName: 'contDataCollector',
+        packageName: packageName,
+        dataType: DataType.POLYMERIZE_CONTINUOUS_HEART_RATE_STATISTICS,
+        dataGenerateType: DataGenerateType.DATA_TYPE_RAW,
+      );
+
+      DataCollector instDataCollector = DataCollector(
+        dataStreamName: 'instDataCollector',
+        packageName: packageName,
+        dataType: DataType.DT_INSTANTANEOUS_HEART_RATE,
+        dataGenerateType: DataGenerateType.DATA_TYPE_RAW,
+      );
+
+      List<SampleSet> subDataDetails = <SampleSet>[
+        SampleSet(instDataCollector, <SamplePoint>[
+          SamplePoint(
+            dataCollector: instDataCollector,
+          )
+            ..setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
+            ..setFieldValue(Field.FIELD_BPM, 88.0)
+        ])
+      ];
+
+      List<SamplePoint> subDataSummary = <SamplePoint>[
+        SamplePoint(
+          dataCollector: contDataCollector,
+        )
+          ..setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
+          ..setFieldValue(Field.FIELD_AVG, 90.0)
+          ..setFieldValue(Field.FIELD_MAX, 100.0)
+          ..setFieldValue(Field.FIELD_MIN, 80.0)
+          ..setFieldValue(Field.LAST, 85.0)
+      ];
+
       final HealthRecord healthRecord = HealthRecord(
         startTime: startTime,
         endTime: endTime,
         metadata: 'Data',
-        healthRecordId: 'healthRecordId0',
         dataCollector: DataCollector(
           dataStreamName: 'such as step count',
-          packageName: 'com.huawei.hms.flutter.health_example',
+          packageName: packageName,
           dataType: HealthDataTypes.DT_HEALTH_RECORD_BRADYCARDIA,
           dataGenerateType: DataGenerateType.DATA_TYPE_RAW,
         ),
       )
-        ..setFieldValue(HealthFields.FIELD_THRESHOLD, 40.9)
-        ..setFieldValue(HealthFields.FIELD_MAX_HEART_RATE, 48.1)
-        ..setFieldValue(HealthFields.FIELD_MIN_HEART_RATE, 40.1)
-        ..setFieldValue(HealthFields.FIELD_AVG_HEART_RATE, 44.1);
+        ..setSubDataSummary(subDataSummary)
+        ..setSubDataDetails(subDataDetails)
+        ..setFieldValue(HealthFields.FIELD_THRESHOLD, 42.0)
+        ..setFieldValue(HealthFields.FIELD_MAX_HEART_RATE, 48.0)
+        ..setFieldValue(HealthFields.FIELD_MIN_HEART_RATE, 42.0)
+        ..setFieldValue(HealthFields.FIELD_AVG_HEART_RATE, 45.0);
+
       final String? result = await HealthRecordController.addHealthRecord(
         HealthRecordInsertOptions(
           healthRecord: healthRecord,
@@ -1096,22 +1160,25 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
       LogOptions.call,
     );
     try {
+      final DateTime startTime = DateTime(2023, 5, 11);
+      final DateTime endTime = DateTime(2023, 5, 13);
+
       HealthRecordReply result = await HealthRecordController.getHealthRecord(
         HealthRecordReadOptions(
-          packageName: 'com.huawei.hms.flutter.health_example',
+          packageName: packageName,
         )
           ..setSubDataTypeList(
             <DataType>[
-              DataType.DT_CONTINUOUS_SLEEP,
+              DataType.DT_INSTANTANEOUS_HEART_RATE,
             ],
           )
           ..setTimeInterval(
-            DateTime.now().subtract(const Duration(days: 17)),
-            DateTime.now().subtract(const Duration(days: 2)),
+            startTime,
+            endTime,
             TimeUnit.MILLISECONDS,
           )
           ..readByDataType(
-            HealthDataTypes.DT_HEALTH_RECORD_SLEEP,
+            HealthDataTypes.DT_HEALTH_RECORD_BRADYCARDIA,
           )
           ..readHealthRecordsFromAllApps(),
       );
@@ -1119,7 +1186,7 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
         'getHealthRecord',
         _healthTextController,
         LogOptions.success,
-        result: result.toString(),
+        result: result.healthRecords[0].toJson(),
       );
     } on PlatformException catch (e) {
       log(
@@ -1144,10 +1211,9 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
         startTime: startTime,
         endTime: endTime,
         metadata: 'Data',
-        healthRecordId: 'healthRecordId0',
         dataCollector: DataCollector(
           dataStreamName: 'such as step count',
-          packageName: 'com.huawei.hms.flutter.health_example',
+          packageName: packageName,
           dataType: HealthDataTypes.DT_HEALTH_RECORD_BRADYCARDIA,
           dataGenerateType: DataGenerateType.DATA_TYPE_RAW,
         ),
@@ -1159,7 +1225,7 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
       await HealthRecordController.updateHealthRecord(
         HealthRecordUpdateOptions(
           healthRecord: healthRecord,
-          healthRecordId: 'healthRecordId0',
+          healthRecordId: '<your_health_record_id>',
         ),
       );
       log(
@@ -1190,7 +1256,7 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
           endTime: DateTime.now(),
         )..setHealthRecordIds(
             <String>[
-              'healthRecordId0',
+              '<your_health_record_id>',
             ],
           ),
       );
@@ -1267,8 +1333,7 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
   }
 
   void showSnackBar(
-    String text,
-    BuildContext context, {
+    String text, {
     Color color = Colors.blue,
   }) {
     final SnackBar snackBar = SnackBar(
@@ -1287,248 +1352,247 @@ class _HealthKitDemoState extends State<HealthKitDemo> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const <Widget>[
-              Text(
-                'Huawei Health Kit for Flutter',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Huawei Health Kit',
+          style: TextStyle(
+            color: Colors.blue,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+            onPressed: requestAuth,
+            icon: const Icon(Icons.ac_unit),
+          ),
+        ],
+      ),
+      body: Builder(
+        builder: (BuildContext context) {
+          return ListView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            children: <Widget>[
+              // Sign In Widgets
+              Card(
+                margin: componentPadding,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Padding(
+                      padding: componentPadding,
+                      child: Text(
+                        'Tap to SignIn button to obtain the HMS Account to complete '
+                        'login and authorization, and then use other buttons '
+                        'to try the related API functions.',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const Padding(
+                      padding: componentPadding,
+                      child: Text(
+                        'Note: If the login page is not displayed, change the package '
+                        'name, AppID, and configure the signature file by referring '
+                        'to the developer guide on the official website.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: componentPadding,
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            Colors.blue,
+                          ),
+                        ),
+                        child: const Text(
+                          'SignIn',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        onPressed: () => signIn(),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Icon(
-                Icons.local_hospital,
-                color: Colors.blue,
+
+              // ActivityRecordsController
+              expansionCard(
+                titleText: 'ActivityRecords Controller',
+                children: <Widget>[
+                  loggingArea(_activityTextController),
+                  ListTile(
+                    title: const Text('AddActivityRecord'),
+                    onTap: () => addActivityRecord(),
+                  ),
+                  ListTile(
+                    title: const Text('GetActivityRecord'),
+                    onTap: () => getActivityRecord(),
+                  ),
+                  ListTile(
+                    title: const Text('beginActivityRecord'),
+                    onTap: () => beginActivityRecord(),
+                  ),
+                  ListTile(
+                    title: const Text('endActivityRecord'),
+                    onTap: () => endActivityRecord(),
+                  ),
+                  ListTile(
+                    title: const Text('endAllActivityRecords'),
+                    onTap: () => endAllActivityRecords(),
+                  ),
+                ],
+              ),
+              // DataController Widgets
+              expansionCard(
+                titleText: 'DataController',
+                children: <Widget>[
+                  loggingArea(_dataTextController),
+                  ListTile(
+                    title: const Text('readTodaySummation'),
+                    onTap: () => readTodaySummation(),
+                  ),
+                  ListTile(
+                    title: const Text('readDailySummationList'),
+                    onTap: () => readDailySummationList(),
+                  ),
+                  ListTile(
+                    title: const Text('insert'),
+                    onTap: () => insert(),
+                  ),
+                  ListTile(
+                    title: const Text('read'),
+                    onTap: () => read(),
+                  ),
+                  ListTile(
+                    title: const Text('update'),
+                    onTap: () => update(),
+                  ),
+                  ListTile(
+                    title: const Text('delete'),
+                    onTap: () => delete(),
+                  ),
+                  ListTile(
+                    title: const Text('clearAll'),
+                    onTap: () => clearAll(),
+                  ),
+                ],
+              ),
+              // SettingController Widgets.
+              expansionCard(
+                titleText: 'SettingController',
+                children: <Widget>[
+                  loggingArea(_settingTextController),
+                  ListTile(
+                    title: const Text('addDataType'),
+                    onTap: () => addDataType(),
+                  ),
+                  ListTile(
+                    title: const Text('readDataType'),
+                    onTap: () => readDataType(),
+                  ),
+                  ListTile(
+                    title: const Text('disableHiHealth'),
+                    onTap: () => disableHiHealth(),
+                  ),
+                  ListTile(
+                    title: const Text('checkHealthAppAuthorization'),
+                    onTap: () => checkHealthAppAuthorization(),
+                  ),
+                  ListTile(
+                    title: const Text('getHealthAppAuthorization'),
+                    onTap: () => getHealthAppAuthorization(),
+                  ),
+                ],
+              ),
+              // AutoRecorderController Widgets
+              expansionCard(
+                titleText: 'AutoRecorderController',
+                children: <Widget>[
+                  loggingArea(_autoRecorderTextController),
+                  ListTile(
+                    title: const Text('startRecord'),
+                    onTap: () => startRecord(),
+                  ),
+                  ListTile(
+                    title: const Text('stopRecord'),
+                    onTap: () => stopRecord(),
+                  ),
+                ],
+              ),
+              // Consent Controller Widgets
+              expansionCard(
+                titleText: 'ConsentController',
+                children: <Widget>[
+                  loggingArea(_consentTextController),
+                  ListTile(
+                    title: const Text('getAppId'),
+                    onTap: () => getAppId(),
+                  ),
+                  ListTile(
+                    title: const Text('getScopes'),
+                    onTap: () => getScopes(),
+                  ),
+                  ListTile(
+                    title: const Text('revoke'),
+                    onTap: () => revoke(),
+                  ),
+                  ListTile(
+                    title: const Text('revokeWithScopes'),
+                    onTap: () => revokeWithScopes(),
+                  ),
+                ],
+              ),
+
+              // Health Controller Widgets
+              expansionCard(
+                titleText: 'HealthController',
+                children: <Widget>[
+                  loggingArea(_healthTextController),
+                  ListTile(
+                    title: const Text('addHealthRecord'),
+                    onTap: () => addHealthRecord(),
+                  ),
+                  ListTile(
+                    title: const Text('getHealthRecord'),
+                    onTap: () => getHealthRecord(),
+                  ),
+                  ListTile(
+                    title: const Text('updateHealthRecord'),
+                    onTap: () => updateHealthRecord(),
+                  ),
+                  ListTile(
+                    title: const Text('deleteHealthRecord'),
+                    onTap: () => deleteHealthRecord(),
+                  ),
+                ],
               ),
             ],
-          ),
-          centerTitle: true,
-          elevation: 0.0,
-          actions: <Widget>[
-            IconButton(
-              onPressed: requestAuth,
-              icon: const Icon(Icons.ac_unit),
-            ),
-          ],
-        ),
-        body: Builder(
-          builder: (BuildContext context) {
-            return ListView(
-              physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics(),
-              ),
-              children: <Widget>[
-                // Sign In Widgets
-                Card(
-                  margin: componentPadding,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const Padding(
-                        padding: componentPadding,
-                        child: Text(
-                          'Tap to SignIn button to obtain the HMS Account to complete '
-                          'login and authorization, and then use other buttons '
-                          'to try the related API functions.',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      const Padding(
-                        padding: componentPadding,
-                        child: Text(
-                          'Note: If the login page is not displayed, change the package '
-                          'name, AppID, and configure the signature file by referring '
-                          'to the developer guide on the official website.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: componentPadding,
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                              Colors.blue,
-                            ),
-                          ),
-                          child: const Text(
-                            'SignIn',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                          onPressed: () => signIn(context),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // ActivityRecordsController
-                expansionCard(
-                  titleText: 'ActivityRecords Controller',
-                  children: <Widget>[
-                    loggingArea(_activityTextController),
-                    ListTile(
-                      title: const Text('AddActivityRecord'),
-                      onTap: () => addActivityRecord(),
-                    ),
-                    ListTile(
-                      title: const Text('GetActivityRecord'),
-                      onTap: () => getActivityRecord(),
-                    ),
-                    ListTile(
-                      title: const Text('beginActivityRecord'),
-                      onTap: () => beginActivityRecord(),
-                    ),
-                    ListTile(
-                      title: const Text('endActivityRecord'),
-                      onTap: () => endActivityRecord(),
-                    ),
-                    ListTile(
-                      title: const Text('endAllActivityRecords'),
-                      onTap: () => endAllActivityRecords(),
-                    ),
-                  ],
-                ),
-                // DataController Widgets
-                expansionCard(
-                  titleText: 'DataController',
-                  children: <Widget>[
-                    loggingArea(_dataTextController),
-                    ListTile(
-                      title: const Text('readTodaySummation'),
-                      onTap: () => readTodaySummation(),
-                    ),
-                    ListTile(
-                      title: const Text('readDailySummation'),
-                      onTap: () => readDailySummation(),
-                    ),
-                    ListTile(
-                      title: const Text('insert'),
-                      onTap: () => insert(),
-                    ),
-                    ListTile(
-                      title: const Text('read'),
-                      onTap: () => read(),
-                    ),
-                    ListTile(
-                      title: const Text('update'),
-                      onTap: () => update(),
-                    ),
-                    ListTile(
-                      title: const Text('delete'),
-                      onTap: () => delete(),
-                    ),
-                    ListTile(
-                      title: const Text('clearAll'),
-                      onTap: () => clearAll(),
-                    ),
-                  ],
-                ),
-                // SettingController Widgets.
-                expansionCard(
-                  titleText: 'SettingController',
-                  children: <Widget>[
-                    loggingArea(_settingTextController),
-                    ListTile(
-                      title: const Text('addDataType'),
-                      onTap: () => addDataType(),
-                    ),
-                    ListTile(
-                      title: const Text('readDataType'),
-                      onTap: () => readDataType(),
-                    ),
-                    ListTile(
-                      title: const Text('disableHiHealth'),
-                      onTap: () => disableHiHealth(),
-                    ),
-                    ListTile(
-                      title: const Text('checkHealthAppAuthorization'),
-                      onTap: () => checkHealthAppAuthorization(),
-                    ),
-                    ListTile(
-                      title: const Text('getHealthAppAuthorization'),
-                      onTap: () => getHealthAppAuthorization(),
-                    ),
-                  ],
-                ),
-                // AutoRecorderController Widgets
-                expansionCard(
-                  titleText: 'AutoRecorderController',
-                  children: <Widget>[
-                    loggingArea(_autoRecorderTextController),
-                    ListTile(
-                      title: const Text('startRecord'),
-                      onTap: () => startRecord(),
-                    ),
-                    ListTile(
-                      title: const Text('stopRecord'),
-                      onTap: () => stopRecord(),
-                    ),
-                  ],
-                ),
-                // Consent Controller Widgets
-                expansionCard(
-                  titleText: 'ConsentController',
-                  children: <Widget>[
-                    loggingArea(_consentTextController),
-                    ListTile(
-                      title: const Text('getAppId'),
-                      onTap: () => getAppId(),
-                    ),
-                    ListTile(
-                      title: const Text('getScopes'),
-                      onTap: () => getScopes(),
-                    ),
-                    ListTile(
-                      title: const Text('revoke'),
-                      onTap: () => revoke(),
-                    ),
-                    ListTile(
-                      title: const Text('revokeWithScopes'),
-                      onTap: () => revokeWithScopes(),
-                    ),
-                  ],
-                ),
-                // Health Controller Widgets
-                expansionCard(
-                  titleText: 'HealthController',
-                  children: <Widget>[
-                    loggingArea(_healthTextController),
-                    ListTile(
-                      title: const Text('addHealthRecord'),
-                      onTap: () => addHealthRecord(),
-                    ),
-                    ListTile(
-                      title: const Text('getHealthRecord'),
-                      onTap: () => getHealthRecord(),
-                    ),
-                    ListTile(
-                      title: const Text('updateHealthRecord'),
-                      onTap: () => updateHealthRecord(),
-                    ),
-                    ListTile(
-                      title: const Text('deleteHealthRecord'),
-                      onTap: () => deleteHealthRecord(),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          },
-        ),
+          );
+        },
       ),
     );
   }
+}
+
+/// Options for logging.
+enum LogOptions {
+  call,
+  success,
+  error,
+  custom,
 }

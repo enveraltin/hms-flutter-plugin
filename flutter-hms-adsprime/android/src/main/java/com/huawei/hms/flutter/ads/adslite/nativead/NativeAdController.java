@@ -1,18 +1,18 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
-
-    Licensed under the Apache License, Version 2.0 (the "License")
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-*/
+ * Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package com.huawei.hms.flutter.ads.adslite.nativead;
 
@@ -23,6 +23,8 @@ import androidx.annotation.NonNull;
 
 import com.huawei.hms.ads.AdListener;
 import com.huawei.hms.ads.AdParam;
+import com.huawei.hms.ads.AppInfo;
+import com.huawei.hms.ads.BiddingInfo;
 import com.huawei.hms.ads.nativead.DislikeAdReason;
 import com.huawei.hms.ads.nativead.NativeAd;
 import com.huawei.hms.ads.nativead.NativeAdConfiguration;
@@ -32,6 +34,7 @@ import com.huawei.hms.flutter.ads.logger.HMSLogger;
 import com.huawei.hms.flutter.ads.utils.FromMap;
 import com.huawei.hms.flutter.ads.utils.ToMap;
 import com.huawei.hms.flutter.ads.utils.constants.ErrorCodes;
+import com.huawei.openalliance.ad.beans.metadata.PromoteInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,16 +46,26 @@ import io.flutter.plugin.common.MethodChannel;
 
 public class NativeAdController implements MethodChannel.MethodCallHandler {
     private static final String TAG = "NativeAdController";
+
     private String id;
+
     private MethodChannel channel;
+
     private Context context;
 
     private NativeAd nativeAd;
+
     private AdListener adListener;
+
     private NativeAd.NativeAdLoadedListener nativeAdLoadedListener;
+
     private NativeAdLoader nativeAdLoader;
+
     private String adSlotId;
+
     private Map<String, Object> adParam;
+
+    public static Map<String, Object> videoConfigurationMap;
 
     NativeAdController(String id, MethodChannel channel, Context context) {
         this.id = id;
@@ -125,6 +138,86 @@ public class NativeAdController implements MethodChannel.MethodCallHandler {
                 result.success(true);
                 HMSLogger.getInstance(context).sendSingleEvent("gotoWhyThisAdPage");
                 break;
+            case "showAppDetailPage":
+                HMSLogger.getInstance(context).startMethodExecutionTimer("showAppDetailPage");
+                try {
+                    nativeAd.showAppDetailPage(context);
+                    HMSLogger.getInstance(context).sendSingleEvent("showAppDetailPage");
+                    result.success(null);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
+                    HMSLogger.getInstance(context).sendSingleEvent("showAppDetailPage", ErrorCodes.INNER);
+                    result.error(ErrorCodes.INNER, "showAppDetailPage failed.", e.getMessage());
+                }
+                break;
+            case "getBiddingInfo":
+                HMSLogger.getInstance(context).startMethodExecutionTimer("getBiddingInfo");
+                BiddingInfo biddingInfo = nativeAd.getBiddingInfo();
+                if (biddingInfo == null) {
+                    HMSLogger.getInstance(context).sendSingleEvent("getBiddingInfo", "-1");
+                    result.error("-1", "BiddingInfo is null.", "");
+                } else {
+                    HMSLogger.getInstance(context).sendSingleEvent("getBiddingInfo");
+                    result.success(ToMap.fromBiddingInfo(biddingInfo));
+                }
+                break;
+            case "getPromoteInfo":
+                HMSLogger.getInstance(context).startMethodExecutionTimer("getPromoteInfo");
+                PromoteInfo promoteInfo = nativeAd.getPromoteInfo();
+                if (promoteInfo == null) {
+                    HMSLogger.getInstance(context).sendSingleEvent("getPromoteInfo", "-1");
+                    result.error("-1", "PromoteInfo is null.", "");
+                } else {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("promoteType", promoteInfo.getType());
+                    map.put("promoteName", promoteInfo.getName());
+                    HMSLogger.getInstance(context).sendSingleEvent("getPromoteInfo");
+                    result.success(map);
+                }
+                break;
+            case "getAppInfo":
+                HMSLogger.getInstance(context).startMethodExecutionTimer("getAppInfo");
+                AppInfo appInfo = nativeAd.getAppInfo();
+                if (appInfo == null) {
+                    HMSLogger.getInstance(context).sendSingleEvent("getAppInfo", "-1");
+                    result.error("-1", "AppInfo is null.", "");
+                } else {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("appName", appInfo.getAppName());
+                    map.put("appDesc", appInfo.getAppDesc());
+                    map.put("iconUrl", appInfo.getAppIconUrl());
+                    map.put("packageName", appInfo.getPkgName());
+                    map.put("privacyLink", appInfo.getPrivacyLink());
+                    map.put("appDetailUrl", appInfo.getAppDetailUrl());
+                    map.put("versionName", appInfo.getVersionName());
+                    map.put("developerName", appInfo.getDeveloperName());
+                    HMSLogger.getInstance(context).sendSingleEvent("getAppInfo");
+                    result.success(map);
+                }
+                break;
+            case "showPrivacyPolicy":
+                HMSLogger.getInstance(context).startMethodExecutionTimer("showPrivacyPolicy");
+                try {
+                    nativeAd.getAppInfo().showPrivacyPolicy(context);
+                    result.success(null);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
+                    HMSLogger.getInstance(context).sendSingleEvent("showPrivacyPolicy", ErrorCodes.INNER);
+                    result.error(ErrorCodes.INNER, "showPrivacyPolicy failed.", e.getMessage());
+                }
+                break;
+            case "showPermissionPage":
+                HMSLogger.getInstance(context).startMethodExecutionTimer("showPermissionPage");
+                try {
+                    nativeAd.getAppInfo().showPermissionPage(context);
+                    HMSLogger.getInstance(context).sendSingleEvent("showPermissionPage");
+                    result.success(null);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
+                    HMSLogger.getInstance(context).sendSingleEvent("showPermissionPage", ErrorCodes.INNER);
+                    result.error(ErrorCodes.INNER, "showPermissionPage failed.", e.getMessage());
+                }
+                break;
             default:
                 onNativeGetterMethodCall(call, result);
         }
@@ -159,6 +252,12 @@ public class NativeAdController implements MethodChannel.MethodCallHandler {
             case "getUniqueId":
                 result.success(nativeAd.getUniqueId());
                 break;
+            case "isTransparencyOpen":
+                result.success(nativeAd.isTransparencyOpen());
+                break;
+            case "transparencyTplUrl":
+                result.success(nativeAd.getTransparencyTplUrl());
+                break;
             default:
                 onVideoMethodCall(call, result);
         }
@@ -171,23 +270,21 @@ public class NativeAdController implements MethodChannel.MethodCallHandler {
                 break;
             case "hasVideo":
                 HMSLogger.getInstance(context).startMethodExecutionTimer("hasVideo");
-                boolean hasVideo = nativeAd.getVideoOperator() != null
-                && nativeAd.getVideoOperator().hasVideo();
+                boolean hasVideo = nativeAd.getVideoOperator() != null && nativeAd.getVideoOperator().hasVideo();
                 result.success(hasVideo);
                 HMSLogger.getInstance(context).sendSingleEvent("hasVideo");
                 break;
             case "isCustomOperateEnabled":
                 HMSLogger.getInstance(context).startMethodExecutionTimer("isCustomOperateEnabled");
-                boolean isCustomOperateEnabled = nativeAd.getVideoOperator() != null
-                        && nativeAd.getVideoOperator().isCustomizeOperateEnabled();
-                        result.success(isCustomOperateEnabled);
+                boolean isCustomOperateEnabled = nativeAd.getVideoOperator() != null && nativeAd.getVideoOperator()
+                    .isCustomizeOperateEnabled();
+                result.success(isCustomOperateEnabled);
                 HMSLogger.getInstance(context).sendSingleEvent("isCustomOperateEnabled");
                 break;
             case "isMuted":
                 HMSLogger.getInstance(context).startMethodExecutionTimer("isMuted");
-                boolean isMuted = nativeAd.getVideoOperator() != null
-                        && nativeAd.getVideoOperator().isMuted();
-                        result.success(isMuted);
+                boolean isMuted = nativeAd.getVideoOperator() != null && nativeAd.getVideoOperator().isMuted();
+                result.success(isMuted);
                 HMSLogger.getInstance(context).sendSingleEvent("isMuted");
                 break;
             case "mute":
@@ -230,7 +327,8 @@ public class NativeAdController implements MethodChannel.MethodCallHandler {
             result.success(true);
             HMSLogger.getInstance(context).sendSingleEvent("muteNativeAd");
         } else {
-            result.error(ErrorCodes.NULL_PARAM, "Video Operator or boolean parameter is null. Mute failed. | isMute : " + mute, "");
+            result.error(ErrorCodes.NULL_PARAM,
+                "Video Operator or boolean parameter is null. Mute failed. | isMute : " + mute, "");
             HMSLogger.getInstance(context).sendSingleEvent("muteNativeAd");
         }
     }
@@ -277,6 +375,7 @@ public class NativeAdController implements MethodChannel.MethodCallHandler {
         boolean slotIdChanged = slotId != null && slotId.equals(this.adSlotId);
         Map<String, Object> adParamMap = ToMap.fromObject(call.argument("adParam"));
         Map<String, Object> adConfigurationMap = ToMap.fromObject(call.argument("adConfiguration"));
+        videoConfigurationMap = ToMap.fromObject(adConfigurationMap.get("videoConfiguration"));
         if (slotId != null && !slotId.isEmpty()) {
             if (slotIdChanged) {
                 adSlotId = slotId;
@@ -289,9 +388,7 @@ public class NativeAdController implements MethodChannel.MethodCallHandler {
                 if (adListener != null) {
                     builder.setAdListener(adListener);
                 }
-                nativeAdLoader = builder
-                    .setNativeAdOptions(generateNativeAdConfiguration(adConfigurationMap))
-                    .build();
+                nativeAdLoader = builder.setNativeAdOptions(generateNativeAdConfiguration(adConfigurationMap)).build();
                 if (nativeAd == null || slotIdChanged) {
                     adParam = adParamMap;
                     loadAd();
@@ -300,7 +397,8 @@ public class NativeAdController implements MethodChannel.MethodCallHandler {
             result.success(true);
             HMSLogger.getInstance(context).sendSingleEvent("setupNativeAdController");
         } else {
-            result.error(ErrorCodes.NULL_PARAM, "adSlotId is either null or empty. Controller setup failed. | Controller id : " + id, "");
+            result.error(ErrorCodes.NULL_PARAM,
+                "adSlotId is either null or empty. Controller setup failed. | Controller id : " + id, "");
             HMSLogger.getInstance(context).sendSingleEvent("setupNativeAdController");
         }
     }

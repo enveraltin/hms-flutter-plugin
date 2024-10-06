@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,12 +14,19 @@
     limitations under the License.
 */
 
-part of huawei_ads;
+part of '../../../huawei_ads.dart';
 
 class NativeAd extends StatefulWidget {
+  /// Ad slot ID.
   final String adSlotId;
+
+  /// Native ad layout type.
   final NativeAdType type;
+
+  /// Style options for the views present in a native ad.
   final NativeStyles? styles;
+
+  /// Controller which gives you access to the methods that are associated with a native ad.
   final NativeAdController? controller;
 
   const NativeAd({
@@ -87,9 +94,18 @@ class _NativeAdState extends State<NativeAd> {
 }
 
 enum NativeAdType {
+  /// Native ad banner template.
   banner,
+
+  /// Native ad small template.
   small,
+
+  /// Native ad full template with the description field.
   full,
+
+  /// Native ad video template.
   video,
+
+  /// Native ad app download button template.
   app_download,
 }

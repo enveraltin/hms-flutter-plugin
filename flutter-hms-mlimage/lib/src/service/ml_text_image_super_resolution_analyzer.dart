@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,9 +14,7 @@
     limitations under the License.
 */
 
-import 'package:flutter/services.dart';
-import 'package:huawei_ml_image/src/common/xport.dart';
-import 'package:huawei_ml_image/src/result/xport.dart';
+part of huawei_ml_image;
 
 class MLTextImageSuperResolutionAnalyzer
     implements BaseImageAnalyzer<dynamic, String> {
@@ -32,25 +30,42 @@ class MLTextImageSuperResolutionAnalyzer
   late MethodChannel _methodChannel;
 
   MLTextImageSuperResolutionAnalyzer() {
-    _methodChannel = MethodChannel("$baseChannel.text_resolution");
+    _methodChannel = const MethodChannel('$baseChannel.text_resolution');
   }
 
   @override
   Future<List<MLTextImageSuperResolution>> analyseFrame(
-      String imagePath) async {
-    List res =
-        await _methodChannel.invokeMethod(mAnalyzeFrame, {'path': imagePath});
-    return res.map((e) => MLTextImageSuperResolution.fromMap(e)).toList();
+    String imagePath,
+  ) async {
+    final List<dynamic> res = await _methodChannel.invokeMethod(
+      mAnalyzeFrame,
+      <String, dynamic>{
+        'path': imagePath,
+      },
+    );
+    return res
+        .map((dynamic e) => MLTextImageSuperResolution.fromMap(e))
+        .toList();
   }
 
   @override
-  Future<MLTextImageSuperResolution> asyncAnalyseFrame(String imagePath) async {
-    return new MLTextImageSuperResolution.fromMap(await _methodChannel
-        .invokeMethod(mAsyncAnalyzeFrame, {'path': imagePath}));
+  Future<MLTextImageSuperResolution> asyncAnalyseFrame(
+    String imagePath,
+  ) async {
+    return MLTextImageSuperResolution.fromMap(
+      await _methodChannel.invokeMethod(
+        mAsyncAnalyzeFrame,
+        <String, dynamic>{
+          'path': imagePath,
+        },
+      ),
+    );
   }
 
   @override
   Future<bool> stop() async {
-    return await _methodChannel.invokeMethod(mStop);
+    return await _methodChannel.invokeMethod(
+      mStop,
+    );
   }
 }

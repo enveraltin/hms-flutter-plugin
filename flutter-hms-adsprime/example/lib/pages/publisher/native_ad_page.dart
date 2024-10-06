@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -71,6 +71,18 @@ class _NativeAdPageState extends State<NativeAdPage> {
 
     String? uniqueId = await controller.getUniqueId();
     debugPrint('uniqueId : $uniqueId');
+
+    String? transparencyTplUrl = await controller.transparencyTplUrl();
+    debugPrint('transparencyTplUrl : $transparencyTplUrl');
+
+    bool? isTransparencyOpen = await controller.isTransparencyOpen();
+    debugPrint('isTransparencyOpen : $isTransparencyOpen');
+
+    PromoteInfo? promoteInfo = await controller.getPromoteInfo();
+    debugPrint('getPromoteInfo : ${promoteInfo.toString()}');
+
+    AppInfo? appInfo = await controller.getAppInfo();
+    debugPrint('getAppInfo: ${appInfo.toString()}');
   }
 
   @override

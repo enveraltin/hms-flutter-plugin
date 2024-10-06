@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,6 @@ public final class SettingControllerConstants {
     private SettingControllerConstants() {
     }
 
-    /**
-     * Constant Variable Keys That will be Used in Serializing/Deserializing operations related to {@link
-     * com.huawei.hms.hihealth.DataController}
-     */
-
     public enum SettingControllerMethods {
         ADD_DATA_TYPE("addDataType"),
         READ_DATA_TYPE("readDataType"),
@@ -41,6 +36,8 @@ public final class SettingControllerConstants {
         GET("get"),
         REVOKE("revoke"),
         REVOKE_WITH_SCOPES("revokeWithScopes"),
+        CANCEL_AUTHORIZATION("cancelAuthorization"),
+        CANCEL_AUTHORIZATION_WITH_SCOPES("cancelAuthorizationWithScopes"),
         GET_APP_ID("getAppId"),
         // HMSLogger
         ENABLE_LOGGER("enableLogger"),

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -56,6 +56,8 @@ public final class DataControllerConstants {
         READ("read"),
         READ_DAILY_SUMMATION("readDailySummation"),
         READ_TODAY_SUMMATION("readTodaySummation"),
+        READ_DAILY_SUMMATION_LIST("readDailySummationList"),
+        READ_TODAY_SUMMATION_LIST("readTodaySummationList"),
         UPDATE("update"),
         READ_LATEST_DATA("readLatestData");
 

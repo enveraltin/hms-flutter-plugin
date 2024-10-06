@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -21,22 +21,22 @@ part of huawei_health;
 class UpdateOptions {
   DateTime startTime;
   DateTime endTime;
-  TimeUnit timeUnit;
   SampleSet sampleSet;
+  TimeUnit timeUnit;
 
   UpdateOptions({
     required this.startTime,
     required this.endTime,
-    this.timeUnit = TimeUnit.MILLISECONDS,
     required this.sampleSet,
+    this.timeUnit = TimeUnit.MILLISECONDS,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'startTime': startTime.millisecondsSinceEpoch,
       'endTime': endTime.millisecondsSinceEpoch,
-      'timeUnit': describeEnum(timeUnit),
       'sampleSet': sampleSet.toMap(),
+      'timeUnit': describeEnum(timeUnit),
     }..removeWhere((String k, dynamic v) => v == null);
   }
 }

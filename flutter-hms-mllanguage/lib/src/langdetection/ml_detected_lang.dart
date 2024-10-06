@@ -1,5 +1,5 @@
 /*
-    Copyright 2021-2022. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2021-2024. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -14,15 +14,21 @@
     limitations under the License.
 */
 
+part of '../../huawei_ml_language.dart';
+
 class MLDetectedLang {
   dynamic probability;
   String? langCode;
 
-  MLDetectedLang({this.probability, this.langCode});
+  MLDetectedLang({
+    this.probability,
+    this.langCode,
+  });
 
-  factory MLDetectedLang.fromJson(Map<String, dynamic> json) {
+  factory MLDetectedLang.fromJson(Map<dynamic, dynamic> json) {
     return MLDetectedLang(
-        probability: json['probability'] ?? null,
-        langCode: json['langCode'] ?? null);
+      probability: json['probability'],
+      langCode: json['langCode'],
+    );
   }
 }

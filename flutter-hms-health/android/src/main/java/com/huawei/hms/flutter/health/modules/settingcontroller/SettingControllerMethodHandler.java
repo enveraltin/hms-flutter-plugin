@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,8 @@ import com.huawei.hms.hihealth.data.ScopeLangItem;
 import com.huawei.hms.hihealth.options.DataTypeAddOptions;
 import com.huawei.hms.hihealth.options.DataTypeAddOptions.Builder;
 import com.huawei.hms.hihealth.result.HealthKitAuthResult;
+
+import org.json.JSONException;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -114,6 +116,12 @@ public class SettingControllerMethodHandler implements MethodCallHandler, Plugin
                 break;
             case REVOKE_WITH_SCOPES:
                 revokeWithScopes(call, result);
+                break;
+            case CANCEL_AUTHORIZATION:
+                cancelAuthorization(call, result);
+                break;
+            case CANCEL_AUTHORIZATION_WITH_SCOPES:
+                cancelAuthorizationWithScopes(call, result);
                 break;
             case GET_APP_ID:
                 getAppId(result);
@@ -196,11 +204,6 @@ public class SettingControllerMethodHandler implements MethodCallHandler, Plugin
             new ResultHelper<>(Boolean.class, result, context, call.method));
     }
 
-    /**
-     * Obtains the applicationId from the agconnect-services.json file.
-     *
-     * @param result Flutter result instance for returning the obtained appId value.
-     */
     private void getAppId(final Result result) {
         String appId = AGConnectServicesConfig.fromContext(context).getString("client/app_id");
         if (appId == null) {
@@ -223,6 +226,7 @@ public class SettingControllerMethodHandler implements MethodCallHandler, Plugin
     private void revoke(final MethodCall call, final Result result) {
         checkControllers();
         String appId = (String) call.arguments;
+
         VoidResultListener voidResultListener = new VoidResultHelper(result, context, call.method);
         consentsController.revoke(appId)
             .addOnSuccessListener(voidResultListener::onSuccess)
@@ -235,6 +239,25 @@ public class SettingControllerMethodHandler implements MethodCallHandler, Plugin
         List<String> scopes = call.argument("scopes");
         VoidResultListener voidResultListener = new VoidResultHelper(result, context, call.method);
         consentsController.revoke(appId, scopes)
+            .addOnSuccessListener(voidResultListener::onSuccess)
+            .addOnFailureListener(voidResultListener::onFail);
+    }
+
+    private void cancelAuthorization(final MethodCall call, final Result result) {
+        checkControllers();
+        final Boolean deleteData = (Boolean) call.arguments;
+        final VoidResultListener voidResultListener = new VoidResultHelper(result, context, call.method);
+        consentsController.cancelAuthorization(deleteData)
+            .addOnSuccessListener(voidResultListener::onSuccess)
+            .addOnFailureListener(voidResultListener::onFail);
+    }
+
+    private void cancelAuthorizationWithScopes(final MethodCall call, final Result result) {
+        checkControllers();
+        final String appId = call.argument("appId");
+        final List<String> scopes = call.argument("scopes");
+        final VoidResultListener voidResultListener = new VoidResultHelper(result, context, call.method);
+        consentsController.cancelAuthorization(appId, scopes)
             .addOnSuccessListener(voidResultListener::onSuccess)
             .addOnFailureListener(voidResultListener::onFail);
     }
@@ -277,8 +300,11 @@ public class SettingControllerMethodHandler implements MethodCallHandler, Plugin
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 8888) {
             HealthKitAuthResult result = settingController.parseHealthKitAuthResultFromIntent(data);
-            Log.i("sinan", result.toJson());
-            mResult.success(result.toJson());
+            try {
+                mResult.success(result.toJson());
+            } catch (JSONException e) {
+                Log.i("SettingCntlerHandler", e.toString());
+            }
         }
         return true;
     }

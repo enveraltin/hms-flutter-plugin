@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2021. Huawei Technologies Co., Ltd. All rights reserved.
+    Copyright 2020-2023. Huawei Technologies Co., Ltd. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License")
     you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package com.huawei.hms.flutter.scan.multiprocessor;
 
+import static com.huawei.hms.flutter.scan.scanutils.ScanUtilsMethodCallHandler.SCANMODEDECODE;
+import static com.huawei.hms.flutter.scan.scanutils.ScanUtilsMethodCallHandler.SCANMODEDECODEWITHBITMAP;
 import static com.huawei.hms.flutter.scan.utils.ValueGetter.analyzerIsAvailableWithLogger;
 
 import android.app.Activity;
@@ -39,40 +41,49 @@ import android.widget.ImageView;
 
 import com.huawei.hmf.tasks.OnFailureListener;
 import com.huawei.hmf.tasks.OnSuccessListener;
+import com.huawei.hms.flutter.scan.R;
 import com.huawei.hms.flutter.scan.ScanPlugin;
+import com.huawei.hms.flutter.scan.logger.HMSLogger;
 import com.huawei.hms.flutter.scan.utils.Constants;
+import com.huawei.hms.flutter.scan.utils.Errors;
 import com.huawei.hms.hmsscankit.ScanUtil;
 import com.huawei.hms.ml.scan.HmsScan;
 import com.huawei.hms.ml.scan.HmsScanAnalyzer;
 import com.huawei.hms.mlsdk.common.MLFrame;
-import com.huawei.hms.flutter.scan.R;
-import com.huawei.hms.flutter.scan.logger.HMSLogger;
-import com.huawei.hms.flutter.scan.utils.Errors;
+
+import io.flutter.plugin.common.MethodChannel;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import io.flutter.plugin.common.MethodChannel;
-
 public class MultiProcessorActivity extends Activity {
 
     public static final int REQUEST_CODE_PHOTO = 0X1113;
+
     private static final String TAG = "MultiProcessorActivity";
+
+    public ScanResultView scanResultView;
 
     private MethodChannel multiProcessorChannel;
 
     private SurfaceHolder surfaceHolder;
-    private MultiProcessorCamera mMultiProcessorCamera;
-    private SurfaceCallBack surfaceCallBack;
-    private MultiProcessorHandler handler;
-    private boolean isShow;
-    private int mode;
-    private ImageView galleryButton;
-    private HMSLogger mHMSLogger;
-    private HmsScanAnalyzer mAnalyzer;
 
-    public ScanResultView scanResultView;
+    private MultiProcessorCamera mMultiProcessorCamera;
+
+    private SurfaceCallBack surfaceCallBack;
+
+    private MultiProcessorHandler handler;
+
+    private boolean isShow;
+
+    private int mode;
+
+    private ImageView galleryButton;
+
+    private HMSLogger mHMSLogger;
+
+    private HmsScanAnalyzer mAnalyzer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,40 +98,45 @@ public class MultiProcessorActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_multiprocessor);
 
-        // MultiProcessor mode
-        mode = Objects.requireNonNull(getIntent().getExtras()).getInt("scanMode");
+        try {
+            // MultiProcessor mode
+            mode = Objects.requireNonNull(getIntent().getExtras()).getInt("scanMode");
 
-        mMultiProcessorCamera = new MultiProcessorCamera();
-        surfaceCallBack = new SurfaceCallBack();
-        SurfaceView cameraPreview = findViewById(R.id.surfaceView);
-        adjustSurface(cameraPreview);
-        surfaceHolder = cameraPreview.getHolder();
-        isShow = false;
-        setBackOperation();
+            mMultiProcessorCamera = new MultiProcessorCamera();
+            surfaceCallBack = new SurfaceCallBack();
+            SurfaceView cameraPreview = findViewById(R.id.surfaceView);
+            adjustSurface(cameraPreview);
+            surfaceHolder = cameraPreview.getHolder();
+            isShow = false;
+            setBackOperation();
 
-        Intent multiIntent = getIntent();
-        galleryButton = findViewById(R.id.img_btn);
-        galleryButton.setVisibility(View.INVISIBLE);
+            Intent multiIntent = getIntent();
+            galleryButton = findViewById(R.id.img_btn);
+            galleryButton.setVisibility(View.INVISIBLE);
 
-        int channelId = multiIntent.getIntExtra(Constants.CHANNEL_ID_KEY, -1);
-        if (channelId == -1) {
-            Log.e(Errors.mpChannelError.getErrorCode(), Errors.mpChannelError.getErrorMessage(), null);
-            MultiProcessorActivity.this.finish();
-        } else {
-            multiProcessorChannel = ScanPlugin.SCAN_CHANNELS.get(channelId);
+            int channelId = multiIntent.getIntExtra(Constants.CHANNEL_ID_KEY, -1);
+            if (channelId == -1) {
+                Log.e(Errors.MP_CHANNEL_ERROR.getErrorCode(), Errors.MP_CHANNEL_ERROR.getErrorMessage(), null);
+                MultiProcessorActivity.this.finish();
+            } else {
+                multiProcessorChannel = ScanPlugin.SCAN_CHANNELS.get(channelId);
+            }
+
+            // Gallery option from Flutter.
+            if (multiIntent.getExtras().getBoolean("gallery")
+                    && mode == MultiProcessorMethodCallHandler.MULTIPROCESSOR_ASYNC_CODE) {
+                galleryButton.setVisibility(View.VISIBLE);
+                setPictureScanOperation();
+            }
+
+            scanResultView = findViewById(R.id.scan_result_view);
+
+            mAnalyzer = new HmsScanAnalyzer.Creator(this).setHmsScanTypes(
+                    Objects.requireNonNull(multiIntent.getExtras()).getInt("scanType"),
+                    multiIntent.getExtras().getIntArray("additionalScanTypes")).create();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
         }
-
-        // Gallery option from Flutter.
-        if (multiIntent.getExtras().getBoolean("gallery")) {
-            galleryButton.setVisibility(View.VISIBLE);
-            setPictureScanOperation();
-        }
-
-        scanResultView = findViewById(R.id.scan_result_view);
-
-        mAnalyzer = new HmsScanAnalyzer.Creator(this).setHmsScanTypes(
-            Objects.requireNonNull(multiIntent.getExtras()).getInt("scanType"),
-            multiIntent.getExtras().getIntArray("additionalScanTypes")).create();
 
     }
 
@@ -171,7 +187,8 @@ public class MultiProcessorActivity extends Activity {
     @Override
     public void onBackPressed() {
         if (mode == MultiProcessorMethodCallHandler.MULTIPROCESSOR_ASYNC_CODE
-            || mode == MultiProcessorMethodCallHandler.MULTIPROCESSOR_SYNC_CODE) {
+                || mode == MultiProcessorMethodCallHandler.MULTIPROCESSOR_SYNC_CODE || mode == SCANMODEDECODE
+                || mode == SCANMODEDECODEWITHBITMAP) {
             setResult(RESULT_CANCELED);
         }
         MultiProcessorActivity.this.finish();
@@ -237,12 +254,19 @@ public class MultiProcessorActivity extends Activity {
                 boolean autoSizeText = intent.getExtras().getBoolean("autoSizeText");
                 int minTextSize = intent.getExtras().getInt("minTextSize");
                 int granularity = intent.getExtras().getInt("granularity");
+                boolean multiMode = intent.getExtras().getBoolean("multiMode");
+                int scanType = intent.getExtras().getInt("scanType");
+                int[] additionalScanTypes = intent.getExtras().getIntArray("additionalScanTypes");
+                boolean parseResult = intent.getExtras().getBoolean("parseResult");
 
-                // Handler for multi processor camera -- this is where camera continuously scan barcode.
+                // Handler for multi processor camera -- this is where camera continuously scan
+                // barcode.
                 if (mAnalyzer != null && multiProcessorChannel != null) {
                     handler = new MultiProcessorHandler(MultiProcessorActivity.this, multiProcessorChannel,
-                        mMultiProcessorCamera, mode, colorList, textColor, textSize, strokeWidth, textBackgroundColor,
-                        showText, showTextOutBounds, autoSizeText, minTextSize, granularity, mAnalyzer);
+                            mMultiProcessorCamera, mode, colorList, textColor, textSize, strokeWidth,
+                            textBackgroundColor,
+                            showText, showTextOutBounds, autoSizeText, minTextSize, granularity, mAnalyzer, multiMode,
+                            scanType, additionalScanTypes, parseResult);
                 }
             }
         } catch (IOException e) {
@@ -263,10 +287,8 @@ public class MultiProcessorActivity extends Activity {
             } else if (mode == MultiProcessorMethodCallHandler.MULTIPROCESSOR_ASYNC_CODE && mAnalyzer != null) {
                 decodeMultiAsync(MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData()));
             }
-        } catch (RuntimeException e) {
-            throw e;
         } catch (Exception e) {
-            Log.e(TAG, "Gallery Exception");
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -279,7 +301,7 @@ public class MultiProcessorActivity extends Activity {
                 @Override
                 public void onSuccess(List<HmsScan> hmsScans) {
                     if (hmsScans != null && hmsScans.size() > 0 && hmsScans.get(0) != null && !TextUtils.isEmpty(
-                        hmsScans.get(0).getOriginalValue())) {
+                            hmsScans.get(0).getOriginalValue())) {
                         mHMSLogger.sendSingleEvent("MultiProcessorActivity.decodeMultiAsync");
                         HmsScan[] infos = new HmsScan[hmsScans.size()];
                         Intent intent = new Intent();
@@ -293,11 +315,12 @@ public class MultiProcessorActivity extends Activity {
                 public void onFailure(Exception e) {
                     Log.w(TAG, e);
                     mHMSLogger.sendSingleEvent("MultiProcessorActivity.decodeMultiAsync",
-                        Errors.decodeMultiAsyncOnFailure.getErrorCode());
+                            Errors.DECODE_MULTI_ASYNC_ON_FAILURE.getErrorCode());
                 }
             });
         } else {
-            Log.e(Errors.hmsScanAnalyzerError.getErrorCode(), Errors.hmsScanAnalyzerError.getErrorMessage(), null);
+            Log.e(Errors.HMS_SCAN_ANALYZER_ERROR.getErrorCode(), Errors.HMS_SCAN_ANALYZER_ERROR.getErrorMessage(),
+                    null);
         }
     }
 
@@ -309,7 +332,7 @@ public class MultiProcessorActivity extends Activity {
             SparseArray<HmsScan> result = mAnalyzer.analyseFrame(image);
             mHMSLogger.sendSingleEvent("MultiProcessorActivity.decodeMultiSync");
             if (result != null && result.size() > 0 && result.valueAt(0) != null && !TextUtils.isEmpty(
-                result.valueAt(0).getOriginalValue())) {
+                    result.valueAt(0).getOriginalValue())) {
                 HmsScan[] info = new HmsScan[result.size()];
                 for (int index = 0; index < result.size(); index++) {
                     info[index] = result.valueAt(index);
@@ -319,11 +342,12 @@ public class MultiProcessorActivity extends Activity {
                 setResult(RESULT_OK, intent);
                 MultiProcessorActivity.this.finish();
             } else {
-                Log.i("Error code: " + Errors.decodeMultiSyncCouldntFind.getErrorCode(),
-                    Errors.decodeMultiSyncCouldntFind.getErrorMessage());
+                Log.i("Error code: " + Errors.DECODE_MULTI_SYNC_COULDNT_FIND.getErrorCode(),
+                        Errors.DECODE_MULTI_SYNC_COULDNT_FIND.getErrorMessage());
             }
         } else {
-            Log.e(Errors.hmsScanAnalyzerError.getErrorCode(), Errors.hmsScanAnalyzerError.getErrorMessage(), null);
+            Log.e(Errors.HMS_SCAN_ANALYZER_ERROR.getErrorCode(), Errors.HMS_SCAN_ANALYZER_ERROR.getErrorMessage(),
+                    null);
         }
     }
 

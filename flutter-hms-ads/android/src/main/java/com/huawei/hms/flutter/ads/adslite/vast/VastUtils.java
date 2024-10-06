@@ -1,18 +1,18 @@
 /*
-    Copyright 2020-2022. Huawei Technologies Co., Ltd. All rights reserved.
-
-    Licensed under the Apache License, Version 2.0 (the "License")
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-*/
+ * Copyright 2020-2024. Huawei Technologies Co., Ltd. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package com.huawei.hms.flutter.ads.adslite.vast;
 
@@ -54,8 +54,10 @@ public abstract class VastUtils {
         configuration.setMaxRedirectWrapperLimit((Integer) Objects.requireNonNull(map.get("maxRedirectWrapperLimit")));
         configuration.setTest((Boolean) Objects.requireNonNull(map.get("isTest")));
         configuration.setVastEventRetryBatchSize((Integer) Objects.requireNonNull(map.get("vastEventRetryBatchSize")));
-        configuration.setVastEventRetryIntervalSeconds((Integer) Objects.requireNonNull(map.get("vastEventRetryIntervalSeconds")));
-        configuration.setVastEventRetryUploadTimes((Integer) Objects.requireNonNull(map.get("vastEventRetryUploadTimes")));
+        configuration.setVastEventRetryIntervalSeconds(
+            (Integer) Objects.requireNonNull(map.get("vastEventRetryIntervalSeconds")));
+        configuration.setVastEventRetryUploadTimes(
+            (Integer) Objects.requireNonNull(map.get("vastEventRetryUploadTimes")));
         return configuration;
     }
 
@@ -86,9 +88,11 @@ public abstract class VastUtils {
         linearAdSlot.setSlotId((String) Objects.requireNonNull(map.get("slotId")));
         linearAdSlot.setTotalDuration((int) Objects.requireNonNull(map.get("totalDuration")));
         if (map.get("width") != null && map.get("height") != null) {
-            linearAdSlot.setSize((int) Objects.requireNonNull(map.get("width")), (int) Objects.requireNonNull(map.get("height")));
+            linearAdSlot.setSize((int) Objects.requireNonNull(map.get("width")),
+                (int) Objects.requireNonNull(map.get("height")));
         }
-        linearAdSlot.setRequestOptions(requestOptionsFromMap((Map<String, Object>) Objects.requireNonNull(map.get("requestOptions"))));
+        linearAdSlot.setRequestOptions(
+            requestOptionsFromMap((Map<String, Object>) Objects.requireNonNull(map.get("requestOptions"))));
         linearAdSlot.setOrientation((int) Objects.requireNonNull(map.get("orientation")));
         if (map.get("maxAdPods") != null) {
             linearAdSlot.setMaxAdPods((int) Objects.requireNonNull(map.get("maxAdPods")));
