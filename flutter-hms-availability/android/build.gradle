@@ -27,7 +27,11 @@ android {
     namespace 'com.huawei.hms.flutter.hmsavailability'
     compileSdkVersion 34
     buildToolsVersion "31.0.0"
-    
+
+    if (project.android.hasProperty("namespace")) {
+        namespace 'com.huawei.hms.flutter.hmsavailability'
+    }
+
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 34
