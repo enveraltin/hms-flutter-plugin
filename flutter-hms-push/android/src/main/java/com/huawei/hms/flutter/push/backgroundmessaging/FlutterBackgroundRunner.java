@@ -113,7 +113,7 @@ public class FlutterBackgroundRunner implements MethodCallHandler {
                     flutterEngine = new FlutterEngine(context);
 
                     final FlutterCallbackInformation flutterCallbackInfo
-                        = FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
+                            = FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
                     final DartExecutor executor = flutterEngine.getDartExecutor();
                     initializeMethodChannel(executor);
                     final DartCallback dartCallback = new DartCallback(assets, appBundlePath, flutterCallbackInfo);
@@ -152,7 +152,7 @@ public class FlutterBackgroundRunner implements MethodCallHandler {
     public void executeDartCallbackInBgIsolate(final Intent intent, final CountDownLatch latch) {
         if (flutterEngine == null) {
             Log.i(TAG,
-                "A background message could not be handled in Dart as no onBackgroundLocation handler has been registered");
+                    "A background message could not be handled in Dart as no onBackgroundLocation handler has been registered");
             return;
         }
         Result result = null;
